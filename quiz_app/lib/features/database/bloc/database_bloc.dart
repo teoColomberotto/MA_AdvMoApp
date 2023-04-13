@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../database_repository.dart';
+import '../repository/database_repository.dart';
 
 part 'database_event.dart';
 part 'database_state.dart';
