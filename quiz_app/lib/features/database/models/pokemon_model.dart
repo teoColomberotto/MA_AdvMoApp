@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -15,12 +16,13 @@ class Pokemon extends Equatable {
   final int pokedexId;
   final Map answers;
 
-  factory Pokemon.fromJson(Map<String, dynamic> json) {
+  factory Pokemon.fromDocumentSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> doc) {
     return Pokemon(
-      name: json['name'],
-      image: json['image'],
-      pokedexId: json['pokedexId'],
-      answers: json['answers'],
+      name: doc.data()!['name'],
+      image: doc.data()!['image'],
+      pokedexId: doc.data()!['pokedex_id'],
+      answers: doc.data()!['answers'],
     );
   }
 
