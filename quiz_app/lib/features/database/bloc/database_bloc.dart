@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:quiz_app/features/storage/bloc/storage_bloc.dart';
 import 'package:quiz_app/features/storage/models/pokemon_image_model.dart';
 
+import '../models/leaderboard_model.dart';
 import '../models/pokemon_model.dart';
 import '../repository/database_repository.dart';
 
@@ -35,7 +36,7 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
               await _databaseRepository.getPokemonsList(limit: event.limit);
           emit(DatabasePokemonsListLoaded(pokemons: pokemonList));
         } catch (e) {
-          emit(DatabaseError());
+          emit(DatabaseError(message: e.toString()));
         }
 
         for (var pokemon in pokemonList) {
@@ -45,6 +46,16 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
         }
       } else if (event is DatabaseGetPokemonImage) {
         emit(DatabasePokemonImageLoaded(imageData: event.imageData));
+      } else if (event is DatabaseGetLeaderboard) {
+        emit(const DatabaseLoading(message: 'Loading leaderboard...'));
+
+        try {
+          Leaderboard leaderboard =
+              await _databaseRepository.getLeaderboard(limit: event.limit);
+          emit(DatabaseLeaderboardLoaded(leaderboard: leaderboard));
+        } catch (e) {
+          emit(DatabaseError(message: e.toString()));
+        }
       }
     });
   }

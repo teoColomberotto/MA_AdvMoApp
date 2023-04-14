@@ -17,7 +17,7 @@ class Score extends Equatable {
     return Score(
       name: doc.data()!['name'],
       score: doc.data()!['score'],
-      timestamp: DateTime.parse(doc.data()!['timestamp']),
+      timestamp: doc.data()!['timestamp'].toDate(),
     );
   }
 

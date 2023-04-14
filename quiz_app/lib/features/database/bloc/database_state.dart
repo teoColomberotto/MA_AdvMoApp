@@ -19,6 +19,10 @@ class DatabaseLoading extends DatabaseState {
 }
 
 class DatabaseError extends DatabaseState {
+  final String message;
+
+  const DatabaseError({required this.message});
+
   @override
   List<Object> get props => [];
 }
@@ -39,4 +43,13 @@ class DatabasePokemonImageLoaded extends DatabaseState {
 
   @override
   List<Object> get props => [imageData];
+}
+
+class DatabaseLeaderboardLoaded extends DatabaseState {
+  final Leaderboard leaderboard;
+
+  const DatabaseLeaderboardLoaded({required this.leaderboard});
+
+  @override
+  List<Object> get props => [leaderboard];
 }
