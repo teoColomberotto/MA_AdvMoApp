@@ -33,3 +33,14 @@ class DatabaseGetLeaderboard extends DatabaseEvent {
   @override
   List<Object> get props => [limit];
 }
+
+class DatabaseAddScore extends DatabaseEvent {
+  final Score score;
+
+  const DatabaseAddScore({required this.score});
+
+  @override
+  List<Object> get props => [score];
+
+  get name => null;
+}
