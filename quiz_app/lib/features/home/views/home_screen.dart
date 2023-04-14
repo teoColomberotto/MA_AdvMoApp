@@ -1,8 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quiz_app/features/storage/models/pokemon_image_model.dart';
 
 import '../../database/bloc/database_bloc.dart';
 

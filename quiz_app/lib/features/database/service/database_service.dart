@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quiz_app/features/database/models/leaderboard_model.dart';
+import 'package:quiz_app/features/database/models/score_model.dart';
 
 import '../models/pokemon_model.dart';
 
@@ -17,5 +19,20 @@ class DatabaseService {
         .map((docSnapshot) => Pokemon.fromDocumentSnapshot(docSnapshot))
         .toList();
     return pokemonsList;
+  }
+
+  Future<Leaderboard> retrieveLeaderboard(int limit) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+        .collection('scores')
+        .orderBy('score', descending: true)
+        .limit(limit)
+        .get()
+        .catchError((e) => print("database service error: " + e));
+
+    List<Score> scoreList = snapshot.docs
+        .map((docSnapshot) => Score.fromDocumentSnapshot(docSnapshot))
+        .toList();
+    Leaderboard leaderboard = Leaderboard.fromScoreList(scoreList);
+    return leaderboard;
   }
 }
