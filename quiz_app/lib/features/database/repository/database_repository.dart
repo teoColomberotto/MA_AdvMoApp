@@ -18,9 +18,16 @@ class DatabaseRepositoryImpl implements DatabaseRepository {
     Leaderboard leaderboard = await service.retrieveLeaderboard(limit);
     return leaderboard;
   }
+
+  @override
+  Future<Score> uploadScore(Score score) async {
+    Score scoreFromDb = await service.uploadScore(score);
+    return scoreFromDb;
+  }
 }
 
 abstract class DatabaseRepository {
   Future<List<Pokemon>> getPokemonsList({int limit});
   Future<Leaderboard> getLeaderboard({int limit});
+  Future<Score> uploadScore(Score score);
 }

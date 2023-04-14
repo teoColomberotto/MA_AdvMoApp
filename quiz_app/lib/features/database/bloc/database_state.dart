@@ -53,3 +53,21 @@ class DatabaseLeaderboardLoaded extends DatabaseState {
   @override
   List<Object> get props => [leaderboard];
 }
+
+class DatabaseScoreAdded extends DatabaseState {
+  final Score score;
+
+  const DatabaseScoreAdded({required this.score});
+
+  @override
+  List<Object> get props => [score];
+}
+
+class DatabaseScoreNameAlreadyExists extends DatabaseState {
+  final String name;
+
+  const DatabaseScoreNameAlreadyExists({required this.name});
+
+  @override
+  List<Object> get props => [name];
+}

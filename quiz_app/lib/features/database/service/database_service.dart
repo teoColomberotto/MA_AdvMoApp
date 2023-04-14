@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiz_app/features/database/models/leaderboard_model.dart';
 import 'package:quiz_app/features/database/models/score_model.dart';
 
+import '../../../exceptions/name_exception.dart';
 import '../models/pokemon_model.dart';
 
 class DatabaseService {
@@ -34,5 +35,30 @@ class DatabaseService {
         .toList();
     Leaderboard leaderboard = Leaderboard.fromScoreList(scoreList);
     return leaderboard;
+  }
+
+  Future<Score> uploadScore(Score score) async {
+    //search if a score with the same name already exsists in collection scores
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+        .collection('scores')
+        .where('name', isEqualTo: score.name)
+        .get()
+        .catchError((e) => print("database service error: " + e));
+
+    if (snapshot.docs.isNotEmpty) {
+      throw ScoreNameException(name: score.name);
+    }
+
+    DocumentReference<Map<String, dynamic>> docRef = await _db
+        .collection('scores')
+        .add(score.toJson())
+        .catchError((e) => print("database service error: " + e));
+
+    DocumentSnapshot<Map<String, dynamic>> docSnapshot = await docRef
+        .get()
+        .catchError((e) => print("database service error: " + e));
+
+    Score scoreFromDb = Score.fromDocumentSnapshot(docSnapshot);
+    return scoreFromDb;
   }
 }

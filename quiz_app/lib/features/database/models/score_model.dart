@@ -25,7 +25,7 @@ class Score extends Equatable {
     return {
       'name': name,
       'score': score,
-      'timestamp': timestamp.toIso8601String(),
+      'timestamp': Timestamp.fromDate(timestamp),
     };
   }
 
