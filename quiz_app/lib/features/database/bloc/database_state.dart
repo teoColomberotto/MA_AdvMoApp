@@ -31,3 +31,12 @@ class DatabasePokemonsListLoaded extends DatabaseState {
   @override
   List<Object> get props => [pokemons];
 }
+
+class DatabasePokemonImageLoaded extends DatabaseState {
+  final PokemonImage imageData;
+
+  const DatabasePokemonImageLoaded({required this.imageData});
+
+  @override
+  List<Object> get props => [imageData];
+}

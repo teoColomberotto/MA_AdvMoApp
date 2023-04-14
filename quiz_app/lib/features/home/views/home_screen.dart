@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quiz_app/features/storage/models/pokemon_image_model.dart';
 
 import '../../database/bloc/database_bloc.dart';
 
@@ -20,6 +23,17 @@ class MyHomePage extends StatelessWidget {
           context
               .read<DatabaseBloc>()
               .add(const DatabaseGetPokemonsList(limit: 15));
+        } else if (state is DatabasePokemonImageLoaded) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Pokemon image loaded!')));
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text("pokemon image"),
+                  content: Image.memory(state.imageData.imageData),
+                );
+              });
         }
       },
       builder: (context, state) {

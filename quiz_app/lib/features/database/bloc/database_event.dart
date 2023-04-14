@@ -15,3 +15,12 @@ class DatabaseGetPokemonsList extends DatabaseEvent {
   @override
   List<Object> get props => [limit];
 }
+
+class DatabaseGetPokemonImage extends DatabaseEvent {
+  final PokemonImage imageData;
+
+  const DatabaseGetPokemonImage({required this.imageData});
+
+  @override
+  List<Object> get props => [imageData];
+}
