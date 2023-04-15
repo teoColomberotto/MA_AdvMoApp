@@ -11,7 +11,7 @@ class Question {
   AnswerStatus _answerStatus = AnswerStatus.unanswered;
   QuestionStatus _status = QuestionStatus.inactive;
   int timeRequiredToAnswer = 0;
-  late final PokemonImage _pokemonImage;
+  late PokemonImage _pokemonImage;
 
   Question({
     required this.pokemon,
@@ -29,15 +29,15 @@ class Question {
   QuestionStatus get status => _status;
   PokemonImage get pokemonImage => _pokemonImage;
 
-  set answer(AnswerStatus answer) {
-    _answerStatus = answer;
+  set answer(AnswerStatus value) {
+    _answerStatus = value;
   }
 
-  set pokemonImage(PokemonImage pokemonImage) {
-    this.pokemonImage = pokemonImage;
+  set pokemonImage(PokemonImage value) {
+    _pokemonImage = value;
   }
 
-  set status(QuestionStatus status) {
-    _status = status;
+  set status(QuestionStatus value) {
+    _status = value;
   }
 }

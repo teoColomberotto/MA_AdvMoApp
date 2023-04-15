@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'features/quizz/bloc/quiz_bloc.dart';
+import 'features/quizz/bloc/timer_bloc.dart';
+import 'features/quizz/models/ticker_model.dart';
 import 'features/storage/bloc/storage_bloc.dart';
 import 'features/storage/repository/storage_repository.dart';
 import 'firebase_options.dart';
@@ -25,6 +28,13 @@ void main() async {
           create: (context) => DatabaseBloc(DatabaseRepositoryImpl(),
               storageBloc: context.read<StorageBloc>()),
         ),
+        BlocProvider(
+            create: (context) => TimerBloc(duration: 30, ticker: MyTicker())),
+        BlocProvider(
+            create: (context) => QuizBloc(
+                timerBloc: context.read<TimerBloc>(),
+                databaseBloc: context.read<DatabaseBloc>(),
+                storageBloc: context.read<StorageBloc>()))
       ],
       child: const MyApp(),
     ),

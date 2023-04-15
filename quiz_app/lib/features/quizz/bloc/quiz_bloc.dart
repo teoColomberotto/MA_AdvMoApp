@@ -22,7 +22,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   final TimerBloc timerBloc;
   final DatabaseBloc databaseBloc;
   final StorageBloc storageBloc;
-  late final Question _currentQuestion;
+  late Question _currentQuestion;
   late final StreamSubscription timerSubscription;
   late final StreamSubscription databaseSubscription;
   late final StreamSubscription strorageSubscription;
@@ -35,6 +35,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     timerSubscription = timerBloc.stream.listen((timerState) {});
     strorageSubscription = storageBloc.stream.listen((storageState) {
       if (storageState is StoragePokemonImageLoaded) {
+        print("image data from database: ${storageState.pokemonImage}");
         add(QuizDisplayPokemonImage(imageData: storageState.pokemonImage));
       }
     });
@@ -79,6 +80,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       questions.add(Question.fromPokemon(pokemon: pokemon));
     }
     _quiz = Quiz(questions: questions);
+    _currentQuestion = _quiz.questions[0];
     emit(QuizLoaded(quiz: _quiz));
     add(const QuizShowNextQuestion(currentQuestionIndex: 0));
   }
@@ -96,20 +98,23 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void mapQuizShowNextQuestionToState(
       QuizShowNextQuestion event, Emitter<QuizState> emit) {
-    Question currentQuestion = _quiz.questions[event.currentQuestionIndex];
     for (var question in _quiz.questions) {
       question.status = QuestionStatus.inactive;
     }
-    currentQuestion.status = QuestionStatus.active;
-    if (currentQuestion.pokemonImage.imageData == Uint8List(0)) {
-      storageBloc.add(StorageDownloadPokemonImage(
-          pokedexId: currentQuestion.pokemon.pokedexId));
-    }
-    emit(QuizQuestionShown(question: currentQuestion));
+    _currentQuestion = _quiz.questions[event.currentQuestionIndex];
+    _currentQuestion.status = QuestionStatus.active;
+
+    // if (currentQuestion.pokemonImage.imageData == []) {
+    storageBloc.add(StorageDownloadPokemonImage(
+        pokedexId: _currentQuestion.pokemon.pokedexId));
+    // }
+    emit(QuizQuestionShown(question: _currentQuestion));
   }
 
   void mapQuizDisplayPokemonImageToState(
       QuizDisplayPokemonImage event, Emitter<QuizState> emit) {
+    _currentQuestion.pokemonImage = event.imageData;
+    print("image data in current question: ${_currentQuestion.pokemonImage}");
     emit(QuizPokemonImageDisplayed(question: _currentQuestion));
   }
 
