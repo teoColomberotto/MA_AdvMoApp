@@ -21,7 +21,7 @@ class Question {
   factory Question.fromPokemon({required Pokemon pokemon}) {
     return Question(
       pokemon: pokemon,
-      pokemonImage: PokemonImage.fromStorageData(Uint8List(0)),
+      pokemonImage: PokemonImage(imageData: Uint8List(0)),
     );
   }
 

@@ -69,6 +69,13 @@ class MyHomePage2 extends StatelessWidget {
                         child: Text(state.question.pokemon.name),
                       ),
                       const Spacer(),
+                      FloatingActionButton(
+                        onPressed: () => context
+                            .read<QuizBloc>()
+                            .add(QuizIncrementCurrentQuestion()),
+                        tooltip: 'Display next question',
+                        child: const Text("Next"),
+                      ),
                     ],
                   ),
                 );

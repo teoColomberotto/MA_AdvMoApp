@@ -31,10 +31,9 @@ class QuizQuestionAnswered extends QuizEvent {
   List<Object> get props => [currentQuestionIndex, answerIndex];
 }
 
-class QuizShowNextQuestion extends QuizEvent {
-  final int currentQuestionIndex;
-  const QuizShowNextQuestion({required this.currentQuestionIndex});
-}
+class QuizIncrementCurrentQuestion extends QuizEvent {}
+
+class QuizShowCurrentQuestion extends QuizEvent {}
 
 class QuizDisplayPokemonImage extends QuizEvent {
   final PokemonImage imageData;

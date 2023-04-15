@@ -35,7 +35,6 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     timerSubscription = timerBloc.stream.listen((timerState) {});
     strorageSubscription = storageBloc.stream.listen((storageState) {
       if (storageState is StoragePokemonImageLoaded) {
-        print("image data from database: ${storageState.pokemonImage}");
         add(QuizDisplayPokemonImage(imageData: storageState.pokemonImage));
       }
     });
@@ -51,8 +50,10 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         mapQuizCreateToState(event, emit);
       } else if (event is QuizQuestionAnswered) {
         mapQuizQuestionAnsweredToState(event, emit);
-      } else if (event is QuizShowNextQuestion) {
-        mapQuizShowNextQuestionToState(event, emit);
+      } else if (event is QuizShowCurrentQuestion) {
+        mapQuizShowCurrentQuestionToState(event, emit);
+      } else if (event is QuizIncrementCurrentQuestion) {
+        mapQuizIncrementCurrentQuestionToState(event, emit);
       } else if (event is QuizDisplayPokemonImage) {
         mapQuizDisplayPokemonImageToState(event, emit);
       } else if (event is QuizFinish) {
@@ -82,7 +83,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     _quiz = Quiz(questions: questions);
     _currentQuestion = _quiz.questions[0];
     emit(QuizLoaded(quiz: _quiz));
-    add(const QuizShowNextQuestion(currentQuestionIndex: 0));
+    add(QuizShowCurrentQuestion());
   }
 
   void mapQuizQuestionAnsweredToState(
@@ -96,18 +97,24 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     emit(QuizQuestionValidated(question: _currentQuestion));
   }
 
-  void mapQuizShowNextQuestionToState(
-      QuizShowNextQuestion event, Emitter<QuizState> emit) {
+  void mapQuizIncrementCurrentQuestionToState(
+      QuizIncrementCurrentQuestion event, Emitter<QuizState> emit) {
+    //get the index of current question
+    int currentQuestionIndex = _quiz.questions.indexOf(_currentQuestion);
+
+    _currentQuestion = _quiz.questions[currentQuestionIndex + 1];
+
+    add(QuizShowCurrentQuestion());
+  }
+
+  void mapQuizShowCurrentQuestionToState(
+      QuizShowCurrentQuestion event, Emitter<QuizState> emit) {
     for (var question in _quiz.questions) {
       question.status = QuestionStatus.inactive;
     }
-    _currentQuestion = _quiz.questions[event.currentQuestionIndex];
     _currentQuestion.status = QuestionStatus.active;
-
-    // if (currentQuestion.pokemonImage.imageData == []) {
     storageBloc.add(StorageDownloadPokemonImage(
         pokedexId: _currentQuestion.pokemon.pokedexId));
-    // }
     emit(QuizQuestionShown(question: _currentQuestion));
   }
 
