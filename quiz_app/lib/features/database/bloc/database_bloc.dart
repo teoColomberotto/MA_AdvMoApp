@@ -74,4 +74,10 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
       }
     });
   }
+
+  @override
+  Future<void> close() {
+    storageSubscription.cancel();
+    return super.close();
+  }
 }
