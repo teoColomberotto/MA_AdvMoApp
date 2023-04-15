@@ -29,6 +29,13 @@
             {
               "client_id": "561662418249-pcfuh95u6m2omm0s4fb4u94a2j6etod4.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "561662418249-qtmdh4h0t0avfngtaorte4c3tljpedrf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.quizApp"
+              }
             }
           ]
         }

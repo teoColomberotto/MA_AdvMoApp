@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'features/storage/bloc/storage_bloc.dart';
+import 'features/storage/repository/storage_repository.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,8 +20,10 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => StorageBloc(StorageRepositoryImpl())),
         BlocProvider(
-          create: (context) => DatabaseBloc(DatabaseRepositoryImpl()),
+          create: (context) => DatabaseBloc(DatabaseRepositoryImpl(),
+              storageBloc: context.read<StorageBloc>()),
         ),
       ],
       child: const MyApp(),
