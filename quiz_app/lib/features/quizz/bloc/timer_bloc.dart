@@ -33,7 +33,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     });
   }
 
-  void _mapStartToState(Start event, emit) {
+  void _mapStartToState(Start event, Emitter<TimerState> emit) {
     emit(Running(event.duration));
     tickerSubscription.cancel();
     tickerSubscription = _ticker.tick(ticks: event.duration).listen(
@@ -43,26 +43,26 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     );
   }
 
-  void _mapPauseToState(Pause event, emit) {
+  void _mapPauseToState(Pause event, Emitter<TimerState> emit) {
     if (state is Running) {
       tickerSubscription.pause();
       emit(Paused(state.duration));
     }
   }
 
-  void _mapResumeToState(Resume event, emit) {
+  void _mapResumeToState(Resume event, Emitter<TimerState> emit) {
     if (state is Paused) {
       tickerSubscription.resume();
       emit(Running(state.duration));
     }
   }
 
-  void _mapResetToState(Reset event, emit) {
+  void _mapResetToState(Reset event, Emitter<TimerState> emit) {
     tickerSubscription.cancel();
     emit(Ready(_duration));
   }
 
-  void _mapTickToState(Tick event, emit) {
+  void _mapTickToState(Tick event, Emitter<TimerState> emit) {
     event.duration > 0 ? emit(Running(event.duration)) : emit(const Finished());
   }
 

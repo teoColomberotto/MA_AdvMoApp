@@ -18,7 +18,7 @@ class QuizLoading extends QuizState {
 class QuizLoaded extends QuizState {
   final Quiz quiz;
 
-  const QuizLoaded(this.quiz);
+  const QuizLoaded({required this.quiz});
 
   @override
   List<Object> get props => [quiz];
@@ -27,7 +27,7 @@ class QuizLoaded extends QuizState {
 class QuizQuestionShown extends QuizState {
   final Question question;
 
-  const QuizQuestionShown(this.question);
+  const QuizQuestionShown({required this.question});
 
   @override
   List<Object> get props => [question];
@@ -36,7 +36,7 @@ class QuizQuestionShown extends QuizState {
 class QuizQuestionValidated extends QuizState {
   final Question question;
 
-  const QuizQuestionValidated(this.question);
+  const QuizQuestionValidated({required this.question});
 
   @override
   List<Object> get props => [question];
@@ -58,6 +58,15 @@ class QuizScoreDisplayed extends QuizState {
 
   @override
   List<Object> get props => [quiz];
+}
+
+class QuizPokemonImageDisplayed extends QuizState {
+  final Question question;
+
+  const QuizPokemonImageDisplayed({required this.question});
+
+  @override
+  List<Object> get props => [question];
 }
 
 class QuizError extends QuizState {

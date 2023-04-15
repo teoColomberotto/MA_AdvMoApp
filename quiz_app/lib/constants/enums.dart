@@ -1,2 +1,4 @@
 //create enum questionStatus
-enum QuestionStatus { unanswered, correct, incorrect }
+enum QuestionStatus { active, inactive }
+
+enum AnswerStatus { unanswered, correct, incorrect }

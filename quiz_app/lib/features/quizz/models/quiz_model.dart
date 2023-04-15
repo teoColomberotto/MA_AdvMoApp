@@ -9,7 +9,7 @@ class Quiz {
 
   static final Quiz _singleton = Quiz._internal();
 
-  factory Quiz(List<Question> questions) {
+  factory Quiz({required List<Question> questions}) {
     _singleton._questions = questions;
     return _singleton;
   }
@@ -27,7 +27,7 @@ class Quiz {
   void computeScore() {
     _score = 0;
     for (final question in _questions) {
-      if (question.answer == QuestionStatus.correct) {
+      if (question.answer == AnswerStatus.correct) {
         _score++;
       }
     }

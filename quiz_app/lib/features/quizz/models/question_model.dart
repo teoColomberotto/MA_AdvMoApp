@@ -8,7 +8,8 @@ import '../../database/models/pokemon_model.dart';
 
 class Question {
   final Pokemon pokemon;
-  QuestionStatus _answer = QuestionStatus.unanswered;
+  AnswerStatus _answerStatus = AnswerStatus.unanswered;
+  QuestionStatus _status = QuestionStatus.inactive;
   int timeRequiredToAnswer = 0;
   late final PokemonImage _pokemonImage;
 
@@ -17,20 +18,26 @@ class Question {
     required PokemonImage pokemonImage,
   }) : _pokemonImage = pokemonImage;
 
-  factory Question.fromPokemon(Pokemon pokemon, bool answer) {
+  factory Question.fromPokemon({required Pokemon pokemon}) {
     return Question(
       pokemon: pokemon,
       pokemonImage: PokemonImage.fromStorageData(Uint8List(0)),
     );
   }
 
-  QuestionStatus get answer => _answer;
+  AnswerStatus get answer => _answerStatus;
+  QuestionStatus get status => _status;
+  PokemonImage get pokemonImage => _pokemonImage;
 
-  set answer(QuestionStatus answer) {
-    _answer = answer;
+  set answer(AnswerStatus answer) {
+    _answerStatus = answer;
   }
 
   set pokemonImage(PokemonImage pokemonImage) {
     this.pokemonImage = pokemonImage;
+  }
+
+  set status(QuestionStatus status) {
+    _status = status;
   }
 }

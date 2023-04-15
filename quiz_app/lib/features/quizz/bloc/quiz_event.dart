@@ -7,19 +7,42 @@ abstract class QuizEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class QuizStarted extends QuizEvent {}
+class QuizStart extends QuizEvent {}
+
+class QuizCreate extends QuizEvent {
+  final List<Pokemon> pokemons;
+
+  const QuizCreate(this.pokemons);
+
+  @override
+  List<Object> get props => [pokemons];
+}
 
 class QuizQuestionAnswered extends QuizEvent {
-  final int questionIndex;
+  final int currentQuestionIndex;
   final int answerIndex;
 
   const QuizQuestionAnswered({
-    required this.questionIndex,
+    required this.currentQuestionIndex,
     required this.answerIndex,
   });
 
   @override
-  List<Object> get props => [questionIndex, answerIndex];
+  List<Object> get props => [currentQuestionIndex, answerIndex];
+}
+
+class QuizShowNextQuestion extends QuizEvent {
+  final int currentQuestionIndex;
+  const QuizShowNextQuestion({required this.currentQuestionIndex});
+}
+
+class QuizDisplayPokemonImage extends QuizEvent {
+  final PokemonImage imageData;
+
+  const QuizDisplayPokemonImage({required this.imageData});
+
+  @override
+  List<Object> get props => [imageData];
 }
 
 class QuizFinish extends QuizEvent {}

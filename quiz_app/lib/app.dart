@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'features/home/views/home_screen.dart';
+import 'features/home/views/home_screen_2.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Pokemon list retrieved from database'),
+      home: const MyHomePage2(title: 'Pokemon list retrieved from database'),
     );
   }
 }
