@@ -16,7 +16,8 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
         try {
           PokemonImage pokemonImage = await _storageRepository
               .downloadPokemonImage(pokedexId: event.pokedexId);
-          emit(StoragePokemonImageLoaded(pokemonImage: pokemonImage));
+          emit(StoragePokemonImageLoaded(
+              pokemonImage: pokemonImage, pokedexId: event.pokedexId));
         } catch (e) {
           emit(StorageError());
         }

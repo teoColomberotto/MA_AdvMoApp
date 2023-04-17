@@ -23,12 +23,13 @@ class StorageLoading extends StorageState {
 class StorageError extends StorageState {}
 
 class StoragePokemonImageLoaded extends StorageState {
+  final PokemonImage pokemonImage;
+  final int pokedexId;
   const StoragePokemonImageLoaded({
     required this.pokemonImage,
+    required this.pokedexId,
   });
 
-  final PokemonImage pokemonImage;
-
   @override
-  List<Object> get props => [pokemonImage];
+  List<Object> get props => [pokemonImage, pokedexId];
 }

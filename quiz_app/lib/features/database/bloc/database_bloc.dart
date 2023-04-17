@@ -41,11 +41,11 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
           emit(DatabaseError(message: e.toString()));
         }
 
-        for (var pokemon in pokemonList) {
-          print("Downloading pokemon image: ${pokemon.pokedexId}");
-          storageBloc
-              .add(StorageDownloadPokemonImage(pokedexId: pokemon.pokedexId));
-        }
+        // for (var pokemon in pokemonList) {
+        //   print("Downloading pokemon image: ${pokemon.pokedexId}");
+        //   storageBloc
+        //       .add(StorageDownloadPokemonImage(pokedexId: pokemon.pokedexId));
+        // }
       } else if (event is DatabaseGetPokemonImage) {
         emit(DatabasePokemonImageLoaded(imageData: event.imageData));
       } else if (event is DatabaseGetLeaderboard) {
@@ -73,5 +73,11 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
         }
       }
     });
+  }
+
+  @override
+  Future<void> close() {
+    storageSubscription.cancel();
+    return super.close();
   }
 }

@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 @immutable
 class PokemonImage extends Equatable {
