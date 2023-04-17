@@ -20,15 +20,15 @@ class QuizCreate extends QuizEvent {
 
 class QuizQuestionAnswered extends QuizEvent {
   final int currentQuestionIndex;
-  final int answerIndex;
+  final int? answerIndex;
 
   const QuizQuestionAnswered({
     required this.currentQuestionIndex,
-    required this.answerIndex,
+    this.answerIndex,
   });
 
   @override
-  List<Object> get props => [currentQuestionIndex, answerIndex];
+  List<Object> get props => [currentQuestionIndex];
 }
 
 class QuizIncrementCurrentQuestion extends QuizEvent {}
@@ -60,3 +60,12 @@ class QuizScoreSubmitted extends QuizEvent {
 class QuizScoreSkipped extends QuizEvent {}
 
 class QuizReset extends QuizEvent {}
+
+class QuizTimerTick extends QuizEvent {
+  final int duration;
+
+  const QuizTimerTick({required this.duration});
+
+  @override
+  List<Object> get props => [duration];
+}

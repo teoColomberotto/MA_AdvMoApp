@@ -18,6 +18,8 @@ class MyHomePage2 extends StatelessWidget {
             quiz = state.quiz;
             // ScaffoldMessenger.of(context)
             //     .showSnackBar(const SnackBar(content: Text('Quiz loaded!')));
+          } else if (state is QuizTimerRunning) {
+            print('Quiz timer running!' + state.duration.toString());
           }
           // } else if (state is QuizQuestionShown) {
           //   ScaffoldMessenger.of(context).showSnackBar(

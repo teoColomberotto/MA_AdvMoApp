@@ -32,7 +32,17 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       required this.databaseBloc,
       required this.storageBloc})
       : super(QuizInitial()) {
-    timerSubscription = timerBloc.stream.listen((timerState) {});
+    timerSubscription = timerBloc.stream.listen((timerState) {
+      if (timerState is Ready) {
+      } else if (timerState is Running) {
+        print('remaining time: ${timerState.duration}');
+        // add(QuizTimerTick(duration: timerState.duration));
+      } else if (timerState is Paused) {
+      } else if (timerState is Finished) {
+        int currentQuestionIndex = _quiz.questions.indexOf(_currentQuestion);
+        add(QuizQuestionAnswered(currentQuestionIndex: currentQuestionIndex));
+      }
+    });
     strorageSubscription = storageBloc.stream.listen((storageState) {
       if (storageState is StoragePokemonImageLoaded) {
         add(QuizDisplayPokemonImage(imageData: storageState.pokemonImage));
@@ -66,6 +76,8 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         mapQuizScoreSkippedToState(event, emit);
       } else if (event is QuizReset) {
         mapQuizResetToState(event, emit);
+      } else if (event is QuizTimerTick) {
+        mapQuizTimerTickToState(event, emit);
       }
     });
   }
@@ -83,22 +95,35 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     _quiz = Quiz(questions: questions);
     _currentQuestion = _quiz.questions[0];
     emit(QuizLoaded(quiz: _quiz));
+    timerBloc.add(Start(duration: 5));
     add(QuizShowCurrentQuestion());
   }
 
   void mapQuizQuestionAnsweredToState(
       QuizQuestionAnswered event, Emitter<QuizState> emit) {
-    _currentQuestion = _quiz.questions[event.currentQuestionIndex];
-    _currentQuestion.answerChoosedByUser = event.answerIndex;
-    if (_currentQuestion.pokemon.answers[event.answerIndex.toString()][1] ==
-        true) {
-      _currentQuestion.answer = AnswerStatus.correct;
+    timerBloc.add(Reset());
+    if (event.answerIndex != null) {
+      print("user has answered the question");
+      _currentQuestion = _quiz.questions[event.currentQuestionIndex];
+      _currentQuestion.answerChoosedByUser = event.answerIndex;
+      if (_currentQuestion.pokemon.answers[event.answerIndex.toString()][1] ==
+          true) {
+        _currentQuestion.answer = AnswerStatus.correct;
+      } else {
+        _currentQuestion.answer = AnswerStatus.incorrect;
+      }
+      emit(QuizQuestionValidated(
+          question: _currentQuestion,
+          currentQuestionIndex: _quiz.questions.indexOf(_currentQuestion)));
     } else {
+      print("timer expired");
       _currentQuestion.answer = AnswerStatus.incorrect;
+      _currentQuestion.answerChoosedByUser = null;
+
+      emit(QuizQuestionValidated(
+          question: _currentQuestion,
+          currentQuestionIndex: _quiz.questions.indexOf(_currentQuestion)));
     }
-    emit(QuizQuestionValidated(
-        question: _currentQuestion,
-        currentQuestionIndex: _quiz.questions.indexOf(_currentQuestion)));
   }
 
   void mapQuizIncrementCurrentQuestionToState(
@@ -111,7 +136,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     } else {
       throw QuestionsLenghtExceeded(index: currentQuestionIndex);
     }
-
+    timerBloc.add(Start(duration: 5));
     add(QuizShowCurrentQuestion());
   }
 
@@ -151,4 +176,8 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       QuizScoreSkipped event, Emitter<QuizState> emit) {}
 
   void mapQuizResetToState(QuizReset event, Emitter<QuizState> emit) {}
+
+  void mapQuizTimerTickToState(QuizTimerTick event, Emitter<QuizState> emit) {
+    emit(QuizTimerRunning(duration: event.duration));
+  }
 }
