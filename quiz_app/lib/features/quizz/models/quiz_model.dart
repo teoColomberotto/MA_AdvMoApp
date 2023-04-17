@@ -5,6 +5,7 @@ import '../../../constants/enums.dart';
 
 class Quiz {
   List<Question> _questions;
+  int _currentQuestionIndex = 0;
   int _score = 0;
 
   static final Quiz _singleton = Quiz._internal();
@@ -17,6 +18,8 @@ class Quiz {
   Quiz._internal() : _questions = [];
 
   int get score => _score;
+  int get currentQuestionIndex => _currentQuestionIndex;
+  Question get currentQuestion => _questions[_currentQuestionIndex];
   int get questionsCount => _questions.length;
   int get correctAnswersCount => _questions
       .where((question) => question.answer == AnswerStatus.correct)
@@ -24,6 +27,7 @@ class Quiz {
   int get wrongAnswersCount => _questions
       .where((question) => question.answer == AnswerStatus.incorrect)
       .length;
+  set currentQuestionIndex(int index) => _currentQuestionIndex = index;
 
   List<Question> get questions => _questions;
 
@@ -32,7 +36,6 @@ class Quiz {
   }
 
   void computeScore() {
-    _score = 0;
     for (final question in _questions) {
       if (question.answer == AnswerStatus.correct) {
         _score++;

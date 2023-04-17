@@ -11,7 +11,7 @@ class Question {
   AnswerStatus _answerStatus = AnswerStatus.unanswered;
   QuestionStatus _status = QuestionStatus.inactive;
   late int? answerChoosedByUser;
-  int timeRequiredToAnswer = 0;
+  late final int _timeRequiredToAnswer;
   late PokemonImage _pokemonImage;
 
   Question({
@@ -29,6 +29,7 @@ class Question {
   AnswerStatus get answer => _answerStatus;
   QuestionStatus get status => _status;
   PokemonImage get pokemonImage => _pokemonImage;
+  int get timeRequiredToAnswer => _timeRequiredToAnswer;
 
   set answer(AnswerStatus value) {
     _answerStatus = value;
@@ -40,5 +41,9 @@ class Question {
 
   set status(QuestionStatus value) {
     _status = value;
+  }
+
+  set timeRequiredToAnswer(int value) {
+    _timeRequiredToAnswer = value;
   }
 }

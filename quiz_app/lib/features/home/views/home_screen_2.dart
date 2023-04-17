@@ -105,7 +105,7 @@ class MyHomePage2 extends StatelessWidget {
                                   state.question.pokemon.answers[key][1];
                               if (answer) {
                                 return MaterialButton(
-                                  color: Colors.green,
+                                  disabledColor: Colors.green,
                                   onPressed: null,
                                   child: Text(buttonText),
                                 );
@@ -184,6 +184,7 @@ class MyHomePage2 extends StatelessWidget {
                   );
                 } else if (state.question.answer == AnswerStatus.correct &&
                     state.currentQuestionIndex == quiz.questions.length - 1) {
+                  // print('Turning green');
                   return Center(
                     child: Column(
                       children: [
@@ -206,7 +207,7 @@ class MyHomePage2 extends StatelessWidget {
                                   state.question.pokemon.answers[key][1];
                               if (answer) {
                                 return MaterialButton(
-                                  color: Colors.green,
+                                  disabledColor: Colors.green,
                                   onPressed: null,
                                   child: Text(buttonText),
                                 );
