@@ -26,8 +26,10 @@ class QuizLoaded extends QuizState {
 
 class QuizQuestionShown extends QuizState {
   final Question question;
+  final int currentQuestionIndex;
 
-  const QuizQuestionShown({required this.question});
+  const QuizQuestionShown(
+      {required this.question, required this.currentQuestionIndex});
 
   @override
   List<Object> get props => [question];
@@ -35,8 +37,10 @@ class QuizQuestionShown extends QuizState {
 
 class QuizQuestionValidated extends QuizState {
   final Question question;
+  final int currentQuestionIndex;
 
-  const QuizQuestionValidated({required this.question});
+  const QuizQuestionValidated(
+      {required this.question, required this.currentQuestionIndex});
 
   @override
   List<Object> get props => [question];
@@ -45,7 +49,7 @@ class QuizQuestionValidated extends QuizState {
 class QuizFinished extends QuizState {
   final Quiz quiz;
 
-  const QuizFinished(this.quiz);
+  const QuizFinished({required this.quiz});
 
   @override
   List<Object> get props => [quiz];

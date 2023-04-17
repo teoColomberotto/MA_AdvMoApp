@@ -10,6 +10,7 @@ class Question {
   final Pokemon pokemon;
   AnswerStatus _answerStatus = AnswerStatus.unanswered;
   QuestionStatus _status = QuestionStatus.inactive;
+  late int answerChoosedByUser;
   int timeRequiredToAnswer = 0;
   late PokemonImage _pokemonImage;
 

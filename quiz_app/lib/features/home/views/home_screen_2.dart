@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../constants/enums.dart';
 import '../../quizz/bloc/quiz_bloc.dart';
+import '../../quizz/models/quiz_model.dart';
 
 class MyHomePage2 extends StatelessWidget {
   const MyHomePage2({super.key, required this.title});
   final String title;
+  static Quiz quiz = Quiz(questions: []);
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<QuizBloc, QuizState>(
         listener: (context, state) {
           if (state is QuizLoaded) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('Quiz loaded!')));
-          } else if (state is QuizQuestionShown) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Quiz question shown!')));
-          } else if (state is QuizPokemonImageDisplayed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Quiz pokemon image displayed!')));
-          } else if (state is QuizError) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('Quiz error!')));
+            quiz = state.quiz;
+            // ScaffoldMessenger.of(context)
+            //     .showSnackBar(const SnackBar(content: Text('Quiz loaded!')));
           }
+          // } else if (state is QuizQuestionShown) {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //       const SnackBar(content: Text('Quiz question shown!')));
+          // } else if (state is QuizPokemonImageDisplayed) {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //       const SnackBar(content: Text('Quiz pokemon image displayed!')));
+          // } else if (state is QuizError) {
+          //   ScaffoldMessenger.of(context)
+          //       .showSnackBar(const SnackBar(content: Text('Quiz error!')));
+          // }
         },
         child: Scaffold(
           appBar: AppBar(
@@ -35,47 +40,264 @@ class MyHomePage2 extends StatelessWidget {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              } else if (state is QuizQuestionShown) {
+              } else if (state is QuizQuestionShown &&
+                  state.question.status == QuestionStatus.active &&
+                  state.question.answer == AnswerStatus.unanswered) {
                 return Center(
                   child: Column(
                     children: [
-                      Text('Question ${state.question.pokemon.name}'),
-                      const Spacer(),
-                      SizedBox(
-                        height: 200,
-                        width: 200,
-                        child: Text(state.question.pokemon.name),
-                      ),
-                      const Spacer(),
-                    ],
-                  ),
-                );
-              } else if (state is QuizPokemonImageDisplayed) {
-                return Center(
-                  child: Column(
-                    children: [
-                      Text('Question ${state.question.pokemon.name}'),
-                      const Spacer(),
                       SizedBox(
                         height: 256,
                         width: 256,
-                        child:
-                            Image.memory(state.question.pokemonImage.imageData),
+                        child: ColorFiltered(
+                            colorFilter: const ColorFilter.mode(
+                                Colors.black, BlendMode.srcIn),
+                            child: Image.memory(
+                                state.question.pokemonImage.imageData)),
                       ),
-                      const Spacer(),
-                      SizedBox(
-                        height: 200,
-                        width: 200,
-                        child: Text(state.question.pokemon.name),
+                      Expanded(
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.question.pokemon.answers.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            String key = state.question.pokemon.answers.keys
+                                .elementAt(index);
+                            String buttonText =
+                                state.question.pokemon.answers[key][0];
+                            return MaterialButton(
+                              onPressed: () => context.read<QuizBloc>().add(
+                                  QuizQuestionAnswered(
+                                      currentQuestionIndex:
+                                          state.currentQuestionIndex,
+                                      answerIndex: int.parse(key))),
+                              child: Text(buttonText),
+                            );
+                          },
+                        ),
                       ),
-                      const Spacer(),
-                      FloatingActionButton(
-                        onPressed: () => context
-                            .read<QuizBloc>()
-                            .add(QuizIncrementCurrentQuestion()),
-                        tooltip: 'Display next question',
-                        child: const Text("Next"),
-                      ),
+                    ],
+                  ),
+                );
+              } else if (state is QuizQuestionValidated) {
+                if (state.question.answer == AnswerStatus.correct &&
+                    state.currentQuestionIndex < quiz.questions.length - 1) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 256,
+                          width: 256,
+                          child: Image.memory(
+                              state.question.pokemonImage.imageData),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.question.pokemon.answers.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              String key = state.question.pokemon.answers.keys
+                                  .elementAt(index);
+                              String buttonText =
+                                  state.question.pokemon.answers[key][0];
+                              bool answer =
+                                  state.question.pokemon.answers[key][1];
+                              if (answer) {
+                                return MaterialButton(
+                                  color: Colors.green,
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              } else {
+                                return MaterialButton(
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        MaterialButton(
+                          color: Colors.blue,
+                          onPressed: () => context
+                              .read<QuizBloc>()
+                              .add(QuizIncrementCurrentQuestion()),
+                          child: const Text('NEXT QUESTION'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (state.question.answer == AnswerStatus.incorrect &&
+                    state.currentQuestionIndex < quiz.questions.length - 1) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 256,
+                          width: 256,
+                          child: Image.memory(
+                              state.question.pokemonImage.imageData),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.question.pokemon.answers.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              String key = state.question.pokemon.answers.keys
+                                  .elementAt(index);
+                              String buttonText =
+                                  state.question.pokemon.answers[key][0];
+                              bool answer =
+                                  state.question.pokemon.answers[key][1];
+                              if (answer) {
+                                return MaterialButton(
+                                  disabledColor: Colors.green,
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              } else if (state.question.answerChoosedByUser ==
+                                  int.parse(key)) {
+                                return MaterialButton(
+                                  disabledColor: Colors.red,
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              } else {
+                                return MaterialButton(
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        MaterialButton(
+                          color: Colors.blue,
+                          onPressed: () => context
+                              .read<QuizBloc>()
+                              .add(QuizIncrementCurrentQuestion()),
+                          child: const Text('NEXT QUESTION'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (state.question.answer == AnswerStatus.correct &&
+                    state.currentQuestionIndex == quiz.questions.length - 1) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 256,
+                          width: 256,
+                          child: Image.memory(
+                              state.question.pokemonImage.imageData),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.question.pokemon.answers.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              String key = state.question.pokemon.answers.keys
+                                  .elementAt(index);
+                              String buttonText =
+                                  state.question.pokemon.answers[key][0];
+                              bool answer =
+                                  state.question.pokemon.answers[key][1];
+                              if (answer) {
+                                return MaterialButton(
+                                  color: Colors.green,
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              } else {
+                                return MaterialButton(
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        MaterialButton(
+                          color: Colors.blue,
+                          onPressed: () =>
+                              context.read<QuizBloc>().add(QuizFinish()),
+                          child: const Text('FINISH QUESTION'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (state.question.answer == AnswerStatus.incorrect &&
+                    state.currentQuestionIndex == quiz.questions.length - 1) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 256,
+                          width: 256,
+                          child: Image.memory(
+                              state.question.pokemonImage.imageData),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.question.pokemon.answers.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              String key = state.question.pokemon.answers.keys
+                                  .elementAt(index);
+                              String buttonText =
+                                  state.question.pokemon.answers[key][0];
+                              bool answer =
+                                  state.question.pokemon.answers[key][1];
+                              if (answer) {
+                                return MaterialButton(
+                                  disabledColor: Colors.green,
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              } else if (state.question.answerChoosedByUser ==
+                                  int.parse(key)) {
+                                return MaterialButton(
+                                  disabledColor: Colors.red,
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              } else {
+                                return MaterialButton(
+                                  onPressed: null,
+                                  child: Text(buttonText),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        MaterialButton(
+                          color: Colors.blue,
+                          onPressed: () =>
+                              context.read<QuizBloc>().add(QuizFinish()),
+                          child: const Text('FINISH QUIZ'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: Column(
+                      children: [
+                        Text(
+                            'Error: Question answer status is ${state.question.answer}, current question index is ${state.currentQuestionIndex}, max question index is ${quiz.questions.length - 1}'),
+                      ],
+                    ),
+                  );
+                }
+              } else if (state is QuizFinished) {
+                return Center(
+                  child: Column(
+                    children: [
+                      Text(
+                          'Correct answers: ${state.quiz.correctAnswersCount}'),
+                      Text(
+                          'Incorrect answers: ${state.quiz.wrongAnswersCount}'),
+                      Text('Total questions: ${state.quiz.questionsCount}'),
                     ],
                   ),
                 );
@@ -90,15 +312,17 @@ class MyHomePage2 extends StatelessWidget {
               }
               return Center(
                 child: Column(
-                  children: [Text('No quiz loaded')],
+                  children: [
+                    MaterialButton(
+                      color: Colors.blue,
+                      onPressed: () =>
+                          context.read<QuizBloc>().add(QuizStart()),
+                      child: const Text('Start quiz'),
+                    ),
+                  ],
                 ),
               );
             },
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => context.read<QuizBloc>().add(QuizStart()),
-            tooltip: 'Start quiz and siplay first question',
-            child: const Text("Start quiz"),
           ),
         ));
   }

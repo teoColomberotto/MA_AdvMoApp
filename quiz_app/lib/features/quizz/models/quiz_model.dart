@@ -17,6 +17,13 @@ class Quiz {
   Quiz._internal() : _questions = [];
 
   int get score => _score;
+  int get questionsCount => _questions.length;
+  int get correctAnswersCount => _questions
+      .where((question) => question.answer == AnswerStatus.correct)
+      .length;
+  int get wrongAnswersCount => _questions
+      .where((question) => question.answer == AnswerStatus.incorrect)
+      .length;
 
   List<Question> get questions => _questions;
 

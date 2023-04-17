@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage2(title: 'Pokemon list retrieved from database'),
+      home: const MyHomePage2(title: 'Testing a basic quiz structure'),
     );
   }
 }
