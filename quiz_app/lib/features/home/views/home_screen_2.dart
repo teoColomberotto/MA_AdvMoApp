@@ -368,12 +368,6 @@ class MyHomePage2 extends StatelessWidget {
                               ],
                             ),
                           ),
-                          MaterialButton(
-                            color: Colors.blue,
-                            onPressed: () =>
-                                context.read<QuizBloc>().add(QuizReset()),
-                            child: const Text('Restart quiz'),
-                          ),
                         ],
                       ),
                     );
