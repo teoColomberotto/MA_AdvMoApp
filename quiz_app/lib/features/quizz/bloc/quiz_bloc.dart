@@ -27,11 +27,12 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   late final StreamSubscription databaseSubscription;
   late final StreamSubscription strorageSubscription;
 
-  QuizBloc(
-      {required this.timerBloc,
-      required this.databaseBloc,
-      required this.storageBloc})
-      : super(QuizInitial()) {
+  QuizBloc({
+    required this.timerBloc,
+    required this.databaseBloc,
+    required this.storageBloc,
+  }) : super(QuizInitial()) {
+    _quiz = Quiz();
     timerSubscription = timerBloc.stream.listen((timerState) {
       if (timerState is Ready) {
       } else if (timerState is Running) {
@@ -92,8 +93,8 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     for (var pokemon in event.pokemons) {
       questions.add(Question.fromPokemon(pokemon: pokemon));
     }
-    _quiz = Quiz(questions: questions);
-    // _currentQuestion = _quiz.questions[0];
+    _quiz.questions = questions;
+
     emit(QuizLoaded(quiz: _quiz));
     timerBloc.add(Start(duration: 5));
     add(QuizShowCurrentQuestion());
@@ -157,7 +158,6 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       QuizDisplayPokemonImage event, Emitter<QuizState> emit) {
     Question currentQuestion = _quiz.currentQuestion;
     currentQuestion.pokemonImage = event.imageData;
-    // print("image data in current question: ${_currentQuestion.pokemonImage}");
     emit(QuizPokemonImageDisplayed(question: currentQuestion));
     emit(QuizQuestionShown(
         question: currentQuestion,
@@ -171,12 +171,25 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   void mapQuizShowScoreToState(QuizShowScore event, Emitter<QuizState> emit) {}
 
   void mapQuizScoreSubmittedToState(
-      QuizScoreSubmitted event, Emitter<QuizState> emit) {}
+      QuizScoreSubmitted event, Emitter<QuizState> emit) {
+    Score score =
+        Score(name: event.scoreName, score: 0, timestamp: DateTime.now());
+    print('score submitted' + score.name);
+    _quiz.score = score;
+    add(QuizReset());
+  }
 
   void mapQuizScoreSkippedToState(
-      QuizScoreSkipped event, Emitter<QuizState> emit) {}
+      QuizScoreSkipped event, Emitter<QuizState> emit) {
+    print('score skipped');
+    add(QuizReset());
+  }
 
-  void mapQuizResetToState(QuizReset event, Emitter<QuizState> emit) {}
+  void mapQuizResetToState(QuizReset event, Emitter<QuizState> emit) {
+    //dispose the _quiz
+    _quiz.dispose();
+    emit(QuizInitial());
+  }
 
   void mapQuizTimerTickToState(QuizTimerTick event, Emitter<QuizState> emit) {
     emit(QuizTimerRunning(duration: event.duration));

@@ -49,12 +49,12 @@ class QuizFinish extends QuizEvent {}
 class QuizShowScore extends QuizEvent {}
 
 class QuizScoreSubmitted extends QuizEvent {
-  final Score score;
+  final String scoreName;
 
-  const QuizScoreSubmitted(this.score);
+  const QuizScoreSubmitted({required this.scoreName});
 
   @override
-  List<Object> get props => [score];
+  List<Object> get props => [scoreName];
 }
 
 class QuizScoreSkipped extends QuizEvent {}
