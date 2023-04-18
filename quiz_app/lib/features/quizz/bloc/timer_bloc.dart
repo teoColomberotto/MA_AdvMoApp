@@ -35,7 +35,6 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
   void _mapStartToState(Start event, Emitter<TimerState> emit) {
     emit(Running(event.duration));
-    print("Timer bloc start");
     // tickerSubscription.cancel();
     tickerSubscription = _ticker.tick(ticks: event.duration).listen(
       (duration) {

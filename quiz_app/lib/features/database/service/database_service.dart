@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:quiz_app/features/database/models/leaderboard_model.dart';
 import 'package:quiz_app/features/database/models/score_model.dart';
 
@@ -14,7 +15,7 @@ class DatabaseService {
         .orderBy('pokedex_id')
         .limit(listLength)
         .get()
-        .catchError((e) => print("database service error: " + e));
+        .catchError((e) => debugPrint("database service error: $e"));
 
     List<Pokemon> pokemonsList = snapshot.docs
         .map((docSnapshot) => Pokemon.fromDocumentSnapshot(docSnapshot))
@@ -28,7 +29,7 @@ class DatabaseService {
         .orderBy('score', descending: true)
         .limit(limit)
         .get()
-        .catchError((e) => print("database service error: " + e));
+        .catchError((e) => debugPrint("database service error: $e"));
 
     List<Score> scoreList = snapshot.docs
         .map((docSnapshot) => Score.fromDocumentSnapshot(docSnapshot))
@@ -43,7 +44,7 @@ class DatabaseService {
         .collection('scores')
         .where('name', isEqualTo: score.name)
         .get()
-        .catchError((e) => print("database service error: " + e));
+        .catchError((e) => debugPrint("database service error: $e"));
 
     if (snapshot.docs.isNotEmpty) {
       throw ScoreNameException(name: score.name);
@@ -52,11 +53,11 @@ class DatabaseService {
     DocumentReference<Map<String, dynamic>> docRef = await _db
         .collection('scores')
         .add(score.toJson())
-        .catchError((e) => print("database service error: " + e));
+        .catchError((e) => debugPrint("database service error: $e"));
 
     DocumentSnapshot<Map<String, dynamic>> docSnapshot = await docRef
         .get()
-        .catchError((e) => print("database service error: " + e));
+        .catchError((e) => debugPrint("database service error: $e"));
 
     Score scoreFromDb = Score.fromDocumentSnapshot(docSnapshot);
     return scoreFromDb;

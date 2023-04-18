@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:quiz_app/constants/enums.dart';
-import 'package:quiz_app/exceptions/questionsLenghtExceeded_exception.dart';
+import 'package:quiz_app/exceptions/questions_lenght_exceeded_exception.dart';
 import 'package:quiz_app/features/database/bloc/database_bloc.dart';
 import 'package:quiz_app/features/quizz/bloc/timer_bloc.dart';
 import 'package:quiz_app/features/storage/bloc/storage_bloc.dart';
@@ -36,7 +37,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     timerSubscription = timerBloc.stream.listen((timerState) {
       if (timerState is Ready) {
       } else if (timerState is Running) {
-        print('remaining time: ${timerState.duration}');
+        debugPrint('remaining time: ${timerState.duration}');
         // add(QuizTimerTick(duration: timerState.duration));
       } else if (timerState is Paused) {
       } else if (timerState is Finished) {
@@ -116,7 +117,6 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
           question: currentQuestion,
           currentQuestionIndex: _quiz.currentQuestionIndex));
     } else {
-      print("timer expired");
       currentQuestion.answer = AnswerStatus.incorrect;
       currentQuestion.answerChoosedByUser = null;
 
@@ -174,19 +174,17 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       QuizScoreSubmitted event, Emitter<QuizState> emit) {
     Score score =
         Score(name: event.scoreName, score: 0, timestamp: DateTime.now());
-    print('score submitted' + score.name);
+    debugPrint('score submitted${score.name}');
     _quiz.score = score;
     add(QuizReset());
   }
 
   void mapQuizScoreSkippedToState(
       QuizScoreSkipped event, Emitter<QuizState> emit) {
-    print('score skipped');
     add(QuizReset());
   }
 
   void mapQuizResetToState(QuizReset event, Emitter<QuizState> emit) {
-    //dispose the _quiz
     _quiz.dispose();
     emit(QuizInitial());
   }

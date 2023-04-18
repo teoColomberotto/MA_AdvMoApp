@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/enums.dart';
-import '../../database/models/score_model.dart';
 import '../../quizz/bloc/quiz_bloc.dart';
 import '../../quizz/bloc/timer_bloc.dart';
 import '../../quizz/models/quiz_model.dart';
@@ -22,7 +20,7 @@ class MyHomePage2 extends StatelessWidget {
             // ScaffoldMessenger.of(context)
             //     .showSnackBar(const SnackBar(content: Text('Quiz loaded!')));
           } else if (state is QuizTimerRunning) {
-            print('Quiz timer running!' + state.duration.toString());
+            debugPrint('Quiz timer running!${state.duration}');
           }
           // } else if (state is QuizQuestionShown) {
           //   ScaffoldMessenger.of(context).showSnackBar(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:quiz_app/exceptions/name_exception.dart';
 import 'package:quiz_app/features/storage/bloc/storage_bloc.dart';
 import 'package:quiz_app/features/storage/models/pokemon_image_model.dart';
@@ -40,12 +41,6 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
         } catch (e) {
           emit(DatabaseError(message: e.toString()));
         }
-
-        // for (var pokemon in pokemonList) {
-        //   print("Downloading pokemon image: ${pokemon.pokedexId}");
-        //   storageBloc
-        //       .add(StorageDownloadPokemonImage(pokedexId: pokemon.pokedexId));
-        // }
       } else if (event is DatabaseGetPokemonImage) {
         emit(DatabasePokemonImageLoaded(imageData: event.imageData));
       } else if (event is DatabaseGetLeaderboard) {
@@ -66,9 +61,9 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
           emit(DatabaseScoreAdded(score: score));
         } on ScoreNameException {
           // todo - handle better excpetion by using internal name variable
-          emit(DatabaseScoreNameAlreadyExists(name: "testname"));
+          emit(const DatabaseScoreNameAlreadyExists(name: "testname"));
         } catch (e) {
-          print("Error: " + e.toString());
+          debugPrint("Error: $e");
           emit(DatabaseError(message: e.toString()));
         }
       }

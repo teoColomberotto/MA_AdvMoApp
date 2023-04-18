@@ -16,9 +16,4 @@ class Leaderboard extends Score {
       leaderboard: scores,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        leaderboard,
-      ];
 }
