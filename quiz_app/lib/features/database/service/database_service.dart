@@ -7,10 +7,13 @@ import '../../../exceptions/name_exception.dart';
 import '../models/pokemon_model.dart';
 
 class DatabaseService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore firestore;
+
+  DatabaseService({FirebaseFirestore? firestore})
+      : firestore = firestore ?? FirebaseFirestore.instance;
 
   Future<List<Pokemon>> retrievePokemonList(int listLength) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('pokemon')
         .orderBy('pokedex_id')
         .limit(listLength)
@@ -24,7 +27,7 @@ class DatabaseService {
   }
 
   Future<Leaderboard> retrieveLeaderboard(int limit) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('scores')
         .orderBy('score', descending: true)
         .limit(limit)
@@ -40,7 +43,7 @@ class DatabaseService {
 
   Future<Score> uploadScore(Score score) async {
     //search if a score with the same name already exsists in collection scores
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('scores')
         .where('name', isEqualTo: score.name)
         .get()
@@ -50,7 +53,7 @@ class DatabaseService {
       throw ScoreNameException(name: score.name);
     }
 
-    DocumentReference<Map<String, dynamic>> docRef = await _db
+    DocumentReference<Map<String, dynamic>> docRef = await firestore
         .collection('scores')
         .add(score.toJson())
         .catchError((e) => debugPrint("database service error: $e"));
