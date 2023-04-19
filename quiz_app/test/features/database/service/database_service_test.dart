@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:quiz_app/exceptions/invalid_limit_exception.dart';
 import 'package:quiz_app/features/database/service/database_service.dart';
 import 'package:test/test.dart';
 import 'package:collection/collection.dart';
+import 'package:quiz_app/constants/constants.dart' as constants;
 
 void main() {
   tearDown(() {});
@@ -51,10 +53,136 @@ void main() {
       expect(pokemonListSnapshot.docs.length,
           pokemonListRetrievedSnapshot.docs.length);
     });
+    test('should return an empty list if no pokemon collection is found',
+        () async {
+      const wrongCollectionPath = 'pokemon2';
+      int limit = 2;
+      WriteBatch batch = fakeFirebaseFirestore.batch();
+
+      for (var pokemon in mockPokemonListSnapshot) {
+        DocumentReference<Map<String, dynamic>> docRef =
+            fakeFirebaseFirestore.collection(wrongCollectionPath).doc();
+        batch.set(docRef, pokemon);
+      }
+      batch.commit();
+
+      final QuerySnapshot<Map<String, dynamic>>? pokemonListRetrievedSnapshot =
+          await databaseService.retrievePokemonList(limit);
+
+      expect(databaseService.retrievePokemonList(limit),
+          isA<Future<QuerySnapshot<Map<String, dynamic>>?>>());
+      expect(pokemonListRetrievedSnapshot!.docs.length, 0);
+    });
+
+    test('should return an exception if provided limit is negative', () async {
+      const collectionPath = 'pokemon';
+      int limit = -2;
+      WriteBatch batch = fakeFirebaseFirestore.batch();
+
+      for (var pokemon in mockPokemonListSnapshot) {
+        DocumentReference<Map<String, dynamic>> docRef =
+            fakeFirebaseFirestore.collection(collectionPath).doc();
+        batch.set(docRef, pokemon);
+      }
+      batch.commit();
+
+      expect(
+          databaseService.retrievePokemonList(limit),
+          throwsA(predicate((e) =>
+              e is InvalidLimitValue &&
+              e.limit == limit &&
+              e.message == constants.INVALID_LIMIT_VALUE_ERROR)));
+    });
+  });
+
+  group('retrieveLeaderboard', () {
+    late FakeFirebaseFirestore fakeFirebaseFirestore;
+    late DatabaseService databaseService;
+
+    setUp(() {
+      fakeFirebaseFirestore = FakeFirebaseFirestore();
+      databaseService = DatabaseService(firestore: fakeFirebaseFirestore);
+    });
+    test('should return a list of scores', () async {
+      const collectionPath = 'scores';
+      int limit = 2;
+      WriteBatch batch = fakeFirebaseFirestore.batch();
+
+      for (var score in mockScoresListSnapshot) {
+        DocumentReference<Map<String, dynamic>> docRef =
+            fakeFirebaseFirestore.collection(collectionPath).doc();
+        batch.set(docRef, score);
+      }
+      batch.commit();
+
+      final QuerySnapshot<Map<String, dynamic>> scoresListSnapshot =
+          await fakeFirebaseFirestore
+              .collection(collectionPath)
+              .orderBy('score', descending: true)
+              .limit(limit)
+              .get();
+
+      final QuerySnapshot<Map<String, dynamic>>? scoresListRetrievedSnapshot =
+          await databaseService.retrieveLeaderboard(limit);
+
+      for (var i = 0; i < scoresListSnapshot.docs.length; i++) {
+        expect(
+            const DeepCollectionEquality().equals(
+                scoresListSnapshot.docs[i].data(),
+                scoresListRetrievedSnapshot!.docs[i].data()),
+            true);
+      }
+      expect(
+          scoresListRetrievedSnapshot!.docs.isSorted(
+              (a, b) => b.data()['score'].compareTo(a.data()['score'])),
+          true);
+      expect(scoresListSnapshot.docs.length,
+          scoresListRetrievedSnapshot.docs.length);
+    });
+    test('should return an empty list if no scores collection is found',
+        () async {
+      const wrongCollectionPath = 'scores2';
+      int limit = 2;
+      WriteBatch batch = fakeFirebaseFirestore.batch();
+
+      for (var score in mockScoresListSnapshot) {
+        DocumentReference<Map<String, dynamic>> docRef =
+            fakeFirebaseFirestore.collection(wrongCollectionPath).doc();
+        batch.set(docRef, score);
+      }
+      batch.commit();
+
+      final QuerySnapshot<Map<String, dynamic>>? scoresListRetrievedSnapshot =
+          await databaseService.retrieveLeaderboard(limit);
+
+      expect(databaseService.retrieveLeaderboard(limit),
+          isA<Future<QuerySnapshot<Map<String, dynamic>>?>>());
+      expect(scoresListRetrievedSnapshot!.docs.length, 0);
+    });
+
+    test('should return an exception if provided limit is negative', () async {
+      const collectionPath = 'scores';
+      int limit = -2;
+      WriteBatch batch = fakeFirebaseFirestore.batch();
+
+      for (var score in mockScoresListSnapshot) {
+        DocumentReference<Map<String, dynamic>> docRef =
+            fakeFirebaseFirestore.collection(collectionPath).doc();
+        batch.set(docRef, score);
+      }
+      batch.commit();
+
+      expect(
+          databaseService.retrieveLeaderboard(limit),
+          throwsA(predicate((e) =>
+              e is InvalidLimitValue &&
+              e.limit == limit &&
+              e.message == constants.INVALID_LIMIT_VALUE_ERROR)));
+    });
   });
 }
 
-const mockPokemonListSnapshot = [
+final mockPokemonListSnapshot = [
   {
     'name': 'bulbasaur',
     'pokedex_id': 1,
@@ -76,5 +204,18 @@ const mockPokemonListSnapshot = [
       3: ['venusaur', false],
       4: ['charmander', false],
     }
+  }
+];
+
+final mockScoresListSnapshot = [
+  {
+    'name': 'user1',
+    'score': 100,
+    'timestamp': Timestamp.fromDate(DateTime.now()),
+  },
+  {
+    'name': 'user2',
+    'score': 200,
+    'timestamp': Timestamp.fromDate(DateTime.now()),
   }
 ];
