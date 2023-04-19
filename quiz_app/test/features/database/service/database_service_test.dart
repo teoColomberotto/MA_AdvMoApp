@@ -41,8 +41,12 @@ void main() {
           .toList();
 
       // Create a new List<Pokemon> from the retrieved data
-      final List<Pokemon> pokemonListRetrieved =
+      final QuerySnapshot<Map<String, dynamic>>? pokemonListRetrievedSnapshot =
           await databaseService.retrievePokemonList(2);
+      final List<Pokemon> pokemonListRetrieved = pokemonListRetrievedSnapshot!
+          .docs
+          .map((docSnapshot) => Pokemon.fromDocumentSnapshot(docSnapshot))
+          .toList();
 
       // Compare the actual data with the retrieved data
       expect(pokemonListRetrieved.runtimeType, List<Pokemon>);
