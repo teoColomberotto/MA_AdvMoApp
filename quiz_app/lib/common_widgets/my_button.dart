@@ -28,10 +28,10 @@ class MyButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MyButtonState createState() => _MyButtonState();
+  MyButtonState createState() => MyButtonState();
 }
 
-class _MyButtonState extends State<MyButton> {
+class MyButtonState extends State<MyButton> {
   bool _hovering = false;
   bool _isPressed = false;
 
