@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:quiz_app/features/database/models/pokemon_model.dart';
 import 'package:quiz_app/features/database/service/database_service.dart';
 import 'package:test/test.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 
 void main() {
   tearDown(() {});
