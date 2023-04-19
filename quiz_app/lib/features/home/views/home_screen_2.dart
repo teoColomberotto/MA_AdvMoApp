@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common_widgets/my_button.dart';
 import '../../../constants/enums.dart';
 import '../../quizz/bloc/quiz_bloc.dart';
 import '../../quizz/bloc/timer_bloc.dart';
