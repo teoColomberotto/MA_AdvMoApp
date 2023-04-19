@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:quiz_app/features/database/models/score_model.dart';
 
 import '../../../exceptions/name_exception.dart';
