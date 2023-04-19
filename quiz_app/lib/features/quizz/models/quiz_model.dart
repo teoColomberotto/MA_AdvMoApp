@@ -2,21 +2,24 @@
 import 'package:quiz_app/features/quizz/models/question_model.dart';
 
 import '../../../constants/enums.dart';
+import '../../database/models/score_model.dart';
 
 class Quiz {
   List<Question> _questions;
-  int _score = 0;
+  int _currentQuestionIndex = 0;
+  late Score _score;
 
   static final Quiz _singleton = Quiz._internal();
 
-  factory Quiz({required List<Question> questions}) {
-    _singleton._questions = questions;
+  factory Quiz() {
     return _singleton;
   }
 
   Quiz._internal() : _questions = [];
 
-  int get score => _score;
+  Score get score => _score;
+  int get currentQuestionIndex => _currentQuestionIndex;
+  Question get currentQuestion => _questions[_currentQuestionIndex];
   int get questionsCount => _questions.length;
   int get correctAnswersCount => _questions
       .where((question) => question.answer == AnswerStatus.correct)
@@ -24,19 +27,26 @@ class Quiz {
   int get wrongAnswersCount => _questions
       .where((question) => question.answer == AnswerStatus.incorrect)
       .length;
-
   List<Question> get questions => _questions;
 
-  void updateQuestion(int index, Question question) {
-    _questions[index] = question;
+  set currentQuestionIndex(int index) => _currentQuestionIndex = index;
+  set score(Score value) => _score = value;
+  set questions(List<Question> value) => _questions = value;
+
+  void resetQuiz() {
+    Quiz._internal();
   }
 
   void computeScore() {
-    _score = 0;
     for (final question in _questions) {
       if (question.answer == AnswerStatus.correct) {
-        _score++;
+        _score.score += 1;
       }
     }
+  }
+
+  void dispose() {
+    _questions = [];
+    _currentQuestionIndex = 0;
   }
 }

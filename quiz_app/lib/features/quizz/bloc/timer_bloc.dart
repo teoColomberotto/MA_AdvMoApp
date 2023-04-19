@@ -11,7 +11,7 @@ part 'timer_state.dart';
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
   late final int _duration;
   late final MyTicker _ticker;
-  late final StreamSubscription<int> tickerSubscription;
+  late StreamSubscription<int> tickerSubscription;
 
   TimerBloc({required duration, required MyTicker ticker})
       : super(Ready(duration)) {
@@ -35,7 +35,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
   void _mapStartToState(Start event, Emitter<TimerState> emit) {
     emit(Running(event.duration));
-    tickerSubscription.cancel();
+    // tickerSubscription.cancel();
     tickerSubscription = _ticker.tick(ticks: event.duration).listen(
       (duration) {
         add(Tick(duration: duration));

@@ -73,6 +73,15 @@ class QuizPokemonImageDisplayed extends QuizState {
   List<Object> get props => [question];
 }
 
+class QuizTimerRunning extends QuizState {
+  final int duration;
+
+  const QuizTimerRunning({required this.duration});
+
+  @override
+  List<Object> get props => [duration];
+}
+
 class QuizError extends QuizState {
   final String message;
 

@@ -29,7 +29,7 @@ void main() async {
               storageBloc: context.read<StorageBloc>()),
         ),
         BlocProvider(
-            create: (context) => TimerBloc(duration: 30, ticker: MyTicker())),
+            create: (context) => TimerBloc(duration: 5, ticker: MyTicker())),
         BlocProvider(
             create: (context) => QuizBloc(
                 timerBloc: context.read<TimerBloc>(),
