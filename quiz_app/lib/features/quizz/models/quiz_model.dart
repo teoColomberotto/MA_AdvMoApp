@@ -39,9 +39,7 @@ class Quiz {
 
   void computeScore() {
     for (final question in _questions) {
-      if (question.answer == AnswerStatus.correct) {
-        _score.score += 1;
-      }
+      if (question.answer == AnswerStatus.correct) {}
     }
   }
 

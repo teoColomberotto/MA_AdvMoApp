@@ -33,8 +33,7 @@ class DatabaseService {
         .collection('scores')
         .orderBy('score', descending: true)
         .limit(limit)
-        .get()
-        .catchError((e) => e);
+        .get();
 
     return snapshot;
   }
