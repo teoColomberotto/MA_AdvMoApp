@@ -4,6 +4,7 @@ import 'package:quiz_app/features/database/models/pokemon_model.dart';
 import 'package:quiz_app/features/database/service/database_service.dart';
 import 'package:test/test.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   tearDown(() {});
@@ -21,7 +22,6 @@ void main() {
       int limit = 2;
       WriteBatch batch = fakeFirebaseFirestore.batch();
 
-      //insert mock data in fake firestore
       for (var pokemon in mockPokemonListSnapshot) {
         DocumentReference<Map<String, dynamic>> docRef =
             fakeFirebaseFirestore.collection(collectionPath).doc();
@@ -29,33 +29,29 @@ void main() {
       }
       batch.commit();
 
-      //retrieve mock data from fake firestore
       final QuerySnapshot<Map<String, dynamic>> pokemonListSnapshot =
           await fakeFirebaseFirestore
               .collection(collectionPath)
               .orderBy('pokedex_id')
               .limit(limit)
               .get();
-      final List<Pokemon> pokemonsList = pokemonListSnapshot.docs
-          .map((docSnapshot) => Pokemon.fromDocumentSnapshot(docSnapshot))
-          .toList();
 
-      // Create a new List<Pokemon> from the retrieved data
       final QuerySnapshot<Map<String, dynamic>>? pokemonListRetrievedSnapshot =
           await databaseService.retrievePokemonList(2);
-      final List<Pokemon> pokemonListRetrieved = pokemonListRetrievedSnapshot!
-          .docs
-          .map((docSnapshot) => Pokemon.fromDocumentSnapshot(docSnapshot))
-          .toList();
 
-      // Compare the actual data with the retrieved data
-      expect(pokemonListRetrieved.runtimeType, List<Pokemon>);
-      expect(pokemonListRetrieved, pokemonsList);
-      expect(pokemonListRetrieved.length, limit);
+      for (var i = 0; i < pokemonListSnapshot.docs.length; i++) {
+        expect(
+            const DeepCollectionEquality().equals(
+                pokemonListSnapshot.docs[i].data(),
+                pokemonListRetrievedSnapshot!.docs[i].data()),
+            true);
+      }
       expect(
-          pokemonListRetrieved
-              .isSorted((a, b) => a.pokedexId.compareTo(b.pokedexId)),
+          pokemonListRetrievedSnapshot!.docs.isSorted((a, b) =>
+              a.data()['pokedex_id'].compareTo(b.data()['pokedex_id'])),
           true);
+      expect(pokemonListSnapshot.docs.length,
+          pokemonListRetrievedSnapshot.docs.length);
     });
   });
 }
