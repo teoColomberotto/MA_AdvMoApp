@@ -390,13 +390,6 @@ class MyHomePage2 extends StatelessWidget {
                                 context.read<QuizBloc>().add(QuizStart()),
                             child: const Text('Start quiz'),
                           ),
-                          MyButton(
-                            text: 'My button',
-                            disabled: false,
-                            onPressed: () {
-                              debugPrint('my button pressed');
-                            } as void Function(),
-                          )
                         ],
                       ),
                     );
