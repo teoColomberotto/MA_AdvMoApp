@@ -57,7 +57,8 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
         emit(const DatabaseLoading(message: 'Uploading score...'));
 
         try {
-          Score score = await _databaseRepository.uploadScore(event.score);
+          Score score =
+              await _databaseRepository.uploadScore(score: event.score);
           emit(DatabaseScoreAdded(score: score));
         } on ScoreNameException {
           // todo - handle better excpetion by using internal name variable
