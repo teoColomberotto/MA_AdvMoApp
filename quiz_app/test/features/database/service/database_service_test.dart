@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:quiz_app/exceptions/invalid_limit_exception.dart';
+import 'package:quiz_app/exceptions/name_exception.dart';
+import 'package:quiz_app/features/database/models/score_model.dart';
 import 'package:quiz_app/features/database/service/database_service.dart';
 import 'package:test/test.dart';
 import 'package:collection/collection.dart';
@@ -180,6 +182,56 @@ void main() {
               e.message == constants.INVALID_LIMIT_VALUE_ERROR)));
     });
   });
+
+  group('uploadScore', () {
+    late FakeFirebaseFirestore fakeFirebaseFirestore;
+    late DatabaseService databaseService;
+
+    setUp(() {
+      fakeFirebaseFirestore = FakeFirebaseFirestore();
+      databaseService = DatabaseService(firestore: fakeFirebaseFirestore);
+    });
+
+    test('should upload a score', () async {
+      const collectionPath = 'scores';
+
+      DocumentSnapshot<Map<String, dynamic>>? scoreUpdated =
+          await databaseService.uploadScore(mockScoreToUpload);
+
+      QuerySnapshot<Map<String, dynamic>> scoreRetrievedFromFirestore =
+          await fakeFirebaseFirestore
+              .collection(collectionPath)
+              .where('name', isEqualTo: mockScoreToUpload.name)
+              .get();
+
+      expect(scoreUpdated, isA<DocumentSnapshot<Map<String, dynamic>>>());
+      expect(
+          const DeepCollectionEquality()
+              .equals(scoreUpdated!.data(), mockScoreToUpload.toJson()),
+          true);
+      expect(
+          const DeepCollectionEquality().equals(
+              scoreUpdated.data(), scoreRetrievedFromFirestore.docs[0].data()),
+          true);
+    });
+
+    test(
+        'should throw an exception if a score with the same name already existis',
+        () async {
+      const collectionPath = 'scores';
+
+      await fakeFirebaseFirestore
+          .collection(collectionPath)
+          .add(mockScoreToUpload.toJson());
+
+      expect(
+          databaseService.uploadScore(mockScoreToUpload),
+          throwsA(predicate((e) =>
+              e is ScoreNameException &&
+              e.name == mockScoreToUpload.name &&
+              e.message == constants.SCORE_NAME_DUPLICATE_ERROR)));
+    });
+  });
 }
 
 final mockPokemonListSnapshot = [
@@ -219,3 +271,9 @@ final mockScoresListSnapshot = [
     'timestamp': Timestamp.fromDate(DateTime.now()),
   }
 ];
+
+final mockScoreToUpload = Score(
+  name: 'user3',
+  score: 300,
+  timestamp: DateTime.now(),
+);
