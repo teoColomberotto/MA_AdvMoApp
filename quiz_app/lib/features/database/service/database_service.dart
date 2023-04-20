@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quiz_app/exceptions/invalid_limit_exception.dart';
 import 'package:quiz_app/features/database/models/score_model.dart';
 
 import '../../../exceptions/name_exception.dart';
@@ -11,24 +12,28 @@ class DatabaseService {
 
   Future<QuerySnapshot<Map<String, dynamic>>?> retrievePokemonList(
       int listLength) async {
+    if (listLength < 0) {
+      throw InvalidLimitValue(limit: listLength);
+    }
     QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('pokemon')
         .orderBy('pokedex_id')
         .limit(listLength)
-        .get()
-        .catchError((e) => e);
+        .get();
 
     return snapshot;
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>?> retrieveLeaderboard(
       int limit) async {
+    if (limit < 0) {
+      throw InvalidLimitValue(limit: limit);
+    }
     QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('scores')
         .orderBy('score', descending: true)
         .limit(limit)
-        .get()
-        .catchError((e) => e);
+        .get();
 
     return snapshot;
   }

@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-class Score {
-  String _name;
-  int score = 0;
-  DateTime timestamp = DateTime.now();
+class Score extends Equatable {
+  final String _name;
+  final int score;
+  final DateTime timestamp;
 
-  Score({
+  const Score({
     required name,
     required this.score,
     required this.timestamp,
@@ -21,7 +22,6 @@ class Score {
   }
 
   String get name => _name;
-  set name(String name) => _name = name;
 
   Map<String, dynamic> toJson() {
     return {
@@ -30,4 +30,7 @@ class Score {
       'timestamp': Timestamp.fromDate(timestamp),
     };
   }
+
+  @override
+  List<Object?> get props => [_name, score, timestamp];
 }

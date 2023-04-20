@@ -6,7 +6,10 @@ import '../models/pokemon_model.dart';
 import '../service/database_service.dart';
 
 class DatabaseRepositoryImpl implements DatabaseRepository {
-  DatabaseService service = DatabaseService();
+  final DatabaseService service;
+
+  DatabaseRepositoryImpl({DatabaseService? service})
+      : service = service ?? DatabaseService();
 
   @override
   Future<List<Pokemon>> getPokemonsList({int limit = 151}) async {
@@ -32,7 +35,7 @@ class DatabaseRepositoryImpl implements DatabaseRepository {
   }
 
   @override
-  Future<Score> uploadScore(Score score) async {
+  Future<Score> uploadScore({required Score score}) async {
     DocumentSnapshot<Map<String, dynamic>>? scoreSnapshot =
         await service.uploadScore(score);
 
@@ -44,5 +47,5 @@ class DatabaseRepositoryImpl implements DatabaseRepository {
 abstract class DatabaseRepository {
   Future<List<Pokemon>> getPokemonsList({int limit});
   Future<Leaderboard> getLeaderboard({int limit});
-  Future<Score> uploadScore(Score score);
+  Future<Score> uploadScore({required Score score});
 }

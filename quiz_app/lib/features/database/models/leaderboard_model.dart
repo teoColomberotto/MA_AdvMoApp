@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:quiz_app/features/database/models/score_model.dart';
 
-class Leaderboard extends Score {
+class Leaderboard extends Score with EquatableMixin {
   final List<Score> leaderboard;
 
   Leaderboard({
@@ -16,4 +17,7 @@ class Leaderboard extends Score {
       leaderboard: scores,
     );
   }
+
+  @override
+  List<Object?> get props => [leaderboard];
 }
