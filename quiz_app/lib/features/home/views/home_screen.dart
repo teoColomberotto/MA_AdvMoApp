@@ -9,7 +9,7 @@ import 'package:auto_route/auto_route.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.title});
+  const HomeScreen({super.key, title}) : title = title ?? 'Home Screen';
   final String title;
   static Quiz quiz = Quiz();
 

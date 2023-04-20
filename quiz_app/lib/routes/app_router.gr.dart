@@ -16,19 +16,14 @@ abstract class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     HomeRoute.name: (routeData) {
-      final args = routeData.argsAs<HomeRouteArgs>();
+      final args =
+          routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: HomeScreen(
           key: args.key,
           title: args.title,
         ),
-      );
-    },
-    SplashRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const SplashScreen(),
       );
     },
     QuizRoute.name: (routeData) {
@@ -57,7 +52,7 @@ abstract class _$AppRouter extends RootStackRouter {
 class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
   HomeRoute({
     Key? key,
-    required String title,
+    dynamic title,
     List<PageRouteInfo>? children,
   }) : super(
           HomeRoute.name,
@@ -76,31 +71,17 @@ class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
 class HomeRouteArgs {
   const HomeRouteArgs({
     this.key,
-    required this.title,
+    this.title,
   });
 
   final Key? key;
 
-  final String title;
+  final dynamic title;
 
   @override
   String toString() {
     return 'HomeRouteArgs{key: $key, title: $title}';
   }
-}
-
-/// generated route for
-/// [SplashScreen]
-class SplashRoute extends PageRouteInfo<void> {
-  const SplashRoute({List<PageRouteInfo>? children})
-      : super(
-          SplashRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'SplashRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
