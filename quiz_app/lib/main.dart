@@ -36,7 +36,7 @@ void main() async {
                 databaseBloc: context.read<DatabaseBloc>(),
                 storageBloc: context.read<StorageBloc>()))
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
   Bloc.observer = AppBlocObserver();
