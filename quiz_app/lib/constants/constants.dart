@@ -10,3 +10,6 @@ const String QUESTIONS_LENGTH_EXCEEDED_ERROR =
 
 const String INVALID_LIMIT_VALUE_ERROR =
     "Invalid limit value, please check your limit value";
+
+const String POKEMON_IMAGE_NOT_FOUND_ERROR =
+    "Pokemon image not found, please check your pokedex id";
