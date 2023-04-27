@@ -7,7 +7,6 @@ import '../bloc/quiz_bloc.dart';
 import '../models/question_model.dart';
 
 class MyQuestionDisplay extends StatelessWidget {
-  //create a constructor that takes in a question object
   final Question question;
   final int answersCount;
   MyQuestionDisplay({super.key, required this.question})
@@ -15,7 +14,6 @@ class MyQuestionDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //return a container with a child of a column
     return BlocBuilder<QuizBloc, QuizState>(builder: (context, quizState) {
       if (quizState is QuizQuestionShown) {
         return _createInitialButtonsList(context, quizState);
@@ -52,7 +50,7 @@ class MyQuestionDisplay extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: MyButton(
-                text: '${answer1[0]} $key_1',
+                text: answer1[0],
                 backgroundColor: Colors.blue,
                 onPressed: () => context.read<QuizBloc>().add(
                     QuizQuestionAnswered(
@@ -63,7 +61,7 @@ class MyQuestionDisplay extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: MyButton(
-                text: '${answer2[0]} $key_2',
+                text: answer2[0],
                 backgroundColor: Colors.blue,
                 onPressed: () => context.read<QuizBloc>().add(
                     QuizQuestionAnswered(
