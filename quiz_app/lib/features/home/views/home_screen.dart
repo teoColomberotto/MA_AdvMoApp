@@ -26,9 +26,6 @@ class HomeScreen extends StatelessWidget {
           }
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-          ),
           body: SafeArea(
             child: Center(
               child: Column(
