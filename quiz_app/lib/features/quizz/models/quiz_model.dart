@@ -7,6 +7,7 @@ import '../../database/models/score_model.dart';
 class Quiz {
   List<Question> _questions;
   int _currentQuestionIndex = 0;
+  int _scorePoints = 0;
   late Score _score;
 
   static final Quiz _singleton = Quiz._internal();
@@ -18,6 +19,7 @@ class Quiz {
   Quiz._internal() : _questions = [];
 
   Score get score => _score;
+  int get scorePoints => _scorePoints;
   int get currentQuestionIndex => _currentQuestionIndex;
   Question get currentQuestion => _questions[_currentQuestionIndex];
   int get questionsCount => _questions.length;
@@ -38,9 +40,13 @@ class Quiz {
   }
 
   void computeScore() {
+    int score = 0;
     for (final question in _questions) {
-      if (question.answer == AnswerStatus.correct) {}
+      if (question.answer == AnswerStatus.correct) {
+        score += 50;
+      }
     }
+    _scorePoints = score;
   }
 
   void dispose() {

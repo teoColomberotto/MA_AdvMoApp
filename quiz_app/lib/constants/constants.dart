@@ -13,3 +13,5 @@ const String INVALID_LIMIT_VALUE_ERROR =
 
 const String POKEMON_IMAGE_NOT_FOUND_ERROR =
     "Pokemon image not found, please check your pokedex id";
+
+const int timerDuration = 5;

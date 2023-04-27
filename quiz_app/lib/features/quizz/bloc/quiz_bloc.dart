@@ -165,15 +165,19 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   }
 
   void mapQuizFinishToState(QuizFinish event, Emitter<QuizState> emit) {
+    _quiz.computeScore();
     emit(QuizFinished(quiz: _quiz));
   }
 
-  void mapQuizShowScoreToState(QuizShowScore event, Emitter<QuizState> emit) {}
+  void mapQuizShowScoreToState(QuizShowScore event, Emitter<QuizState> emit) {
+    add(QuizShowScore());
+  }
 
   void mapQuizScoreSubmittedToState(
       QuizScoreSubmitted event, Emitter<QuizState> emit) {
-    Score score =
-        Score(name: event.scoreName, score: 0, timestamp: DateTime.now());
+    int scorePoints = _quiz.scorePoints;
+    Score score = Score(
+        name: event.scoreName, score: scorePoints, timestamp: DateTime.now());
     debugPrint('score submitted${score.name}');
     _quiz.score = score;
     add(QuizReset());

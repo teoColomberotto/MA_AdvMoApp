@@ -12,6 +12,7 @@ class MyButton extends StatefulWidget {
   final Color textColor;
   final VoidCallback? onPressed;
   final bool disabled;
+  final double minWidth;
 
   const MyButton({
     Key? key,
@@ -20,6 +21,7 @@ class MyButton extends StatefulWidget {
     this.fontSize = 18,
     this.padding = 16,
     this.margin = 8,
+    this.minWidth = 150,
     this.outlineColor = Colors.black,
     this.backgroundColor = Colors.blue,
     this.textColor = Colors.black,
@@ -62,6 +64,8 @@ class MyButtonState extends State<MyButton> {
             onTapCancel: () => setState(() => _isPressed = false),
             onTapUp: (_) => setState(() => _isPressed = false),
             child: Container(
+              constraints: BoxConstraints(minWidth: widget.minWidth),
+              alignment: Alignment.center,
               padding: EdgeInsets.all(widget.padding),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

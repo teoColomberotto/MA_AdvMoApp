@@ -1,45 +1,45 @@
 import 'package:flutter/material.dart';
 
-class TimerDisplay extends StatelessWidget {
-  final int timeRemaining;
-  final int totalTime;
+import 'package:quiz_app/constants/constants.dart' as constants;
 
-  const TimerDisplay({
+class MyTimerDisplay extends StatelessWidget {
+  final int timeRemaining;
+  final int totalTime = constants.timerDuration;
+
+  const MyTimerDisplay({
     super.key,
     required this.timeRemaining,
-    required this.totalTime,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      height: 200,
-      child: Stack(
-        children: [
-          Center(
-            child: SizedBox(
-              width: 200,
-              height: 200,
-              child: CircularProgressIndicator(
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Center(
+          child: SizedBox(
+            width: 300,
+            height: 30,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: LinearProgressIndicator(
+                backgroundColor: Colors.transparent,
                 value: timeRemaining / totalTime,
-                strokeWidth: 10,
-                backgroundColor: Colors.white,
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
               ),
             ),
           ),
-          Center(
-            child: Text(
-              timeRemaining.toString(),
-              style: const TextStyle(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-              ),
+        ),
+        Center(
+          child: Text(
+            timeRemaining.toString(),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

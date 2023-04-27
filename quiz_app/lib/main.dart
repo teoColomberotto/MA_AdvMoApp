@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:quiz_app/features/home/bloc/bloc/home_bloc.dart';
 import 'features/quizz/bloc/quiz_bloc.dart';
 import 'features/quizz/bloc/timer_bloc.dart';
 import 'features/quizz/models/ticker_model.dart';
@@ -14,6 +15,8 @@ import 'app_bloc_observer.dart';
 
 import 'features/database/bloc/database_bloc.dart';
 import 'features/database/repository/database_repository.dart';
+
+import 'constants/constants.dart' as constants;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,12 +32,15 @@ void main() async {
               storageBloc: context.read<StorageBloc>()),
         ),
         BlocProvider(
-            create: (context) => TimerBloc(duration: 5, ticker: MyTicker())),
+            create: (context) => TimerBloc(
+                duration: constants.timerDuration, ticker: MyTicker())),
         BlocProvider(
             create: (context) => QuizBloc(
                 timerBloc: context.read<TimerBloc>(),
                 databaseBloc: context.read<DatabaseBloc>(),
-                storageBloc: context.read<StorageBloc>()))
+                storageBloc: context.read<StorageBloc>())),
+        BlocProvider(
+            create: (context) => HomeBloc(quizBloc: context.read<QuizBloc>())),
       ],
       child: MyApp(),
     ),
