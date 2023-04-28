@@ -43,7 +43,9 @@ void main() async {
                 storageBloc: context.read<StorageBloc>())),
         BlocProvider(
             create: (context) => HomeBloc(quizBloc: context.read<QuizBloc>())),
-        BlocProvider(create: (context) => LeaderboardBloc()),
+        BlocProvider(
+            create: (context) =>
+                LeaderboardBloc(databaseBloc: context.read<DatabaseBloc>())),
         BlocProvider(create: (context) => AboutBloc()),
       ],
       child: MyApp(),

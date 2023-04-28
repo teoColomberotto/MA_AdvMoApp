@@ -10,3 +10,12 @@ abstract class LeaderboardState extends Equatable {
 class LeaderboardInitial extends LeaderboardState {}
 
 class LeaderboardHomeButtonPressed extends LeaderboardState {}
+
+class LeaderboardDisplayed extends LeaderboardState {
+  final Leaderboard leaderboard;
+
+  const LeaderboardDisplayed(this.leaderboard);
+
+  @override
+  List<Object> get props => [leaderboard];
+}
