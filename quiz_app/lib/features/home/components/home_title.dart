@@ -9,11 +9,11 @@ class MyAppTitle extends StatelessWidget {
       children: const [
         Text('Pokemon Quiz',
             style: TextStyle(
-              fontSize: 40,
+              fontSize: 50,
               fontWeight: FontWeight.w900,
               color: Color(0xFFFDE476),
             )),
-        Text('gotta find em all',
+        Text('gotta find em all !',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w900,
