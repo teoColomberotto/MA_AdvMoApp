@@ -11,4 +11,6 @@ class HomePlayPressed extends HomeEvent {}
 
 class HomeLeaderboardPressed extends HomeEvent {}
 
+class HomeAboutPressed extends HomeEvent {}
+
 class HomeResetState extends HomeEvent {}

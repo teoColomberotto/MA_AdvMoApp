@@ -12,3 +12,5 @@ class HomeInitial extends HomeState {}
 class HomePlayButtonPressed extends HomeState {}
 
 class HomeLeaderboardButtonPressed extends HomeState {}
+
+class HomeAboutButtonPressed extends HomeState {}

@@ -15,8 +15,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         mapHomePlayPressedToState(emit);
       } else if (event is HomeLeaderboardPressed) {
         mapHomeLeaderboardPressedToState(emit);
-      } else if (state is HomeResetState) {
+      } else if (event is HomeResetState) {
         emit(HomeInitial());
+      } else if (event is HomeAboutPressed) {
+        mapHomeAboutPressedToState(emit);
       }
     });
   }
@@ -28,5 +30,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void mapHomeLeaderboardPressedToState(Emitter<HomeState> emit) {
     emit(HomeLeaderboardButtonPressed());
+  }
+
+  void mapHomeAboutPressedToState(Emitter<HomeState> emit) {
+    emit(HomeAboutButtonPressed());
   }
 }

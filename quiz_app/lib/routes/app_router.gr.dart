@@ -44,6 +44,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LeaderboardScreen(),
       );
     },
+    AboutRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AboutScreen(),
+      );
+    },
   };
 }
 
@@ -122,6 +128,20 @@ class LeaderboardRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'LeaderboardRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AboutScreen]
+class AboutRoute extends PageRouteInfo<void> {
+  const AboutRoute({List<PageRouteInfo>? children})
+      : super(
+          AboutRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AboutRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

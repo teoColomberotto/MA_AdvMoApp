@@ -5,6 +5,7 @@ import '../features/home/views/home_screen.dart';
 import '../features/leaderboard/views/leaderboard_screen.dart';
 import '../features/quizz/views/quiz_screen.dart';
 import '../features/quizz/views/quiz_recap_screen.dart';
+import '../features/about/views/about_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -19,5 +20,6 @@ class AppRouter extends _$AppRouter {
             path: '/quiz/recap', page: QuizRecapRoute.page, initial: false),
         AutoRoute(
             path: '/leaderboard', page: LeaderboardRoute.page, initial: false),
+        AutoRoute(path: '/about', page: AboutRoute.page, initial: false),
       ];
 }

@@ -24,6 +24,9 @@ class HomeScreen extends StatelessWidget {
           } else if (state is HomeLeaderboardButtonPressed) {
             context.router.pushNamed('/leaderboard');
             context.read<HomeBloc>().add(HomeResetState());
+          } else if (state is HomeAboutButtonPressed) {
+            context.router.pushNamed('/about');
+            context.read<HomeBloc>().add(HomeResetState());
           }
         },
         child: Scaffold(
@@ -43,7 +46,7 @@ class HomeScreen extends StatelessWidget {
                 splashColor: Colors.orangeAccent,
                 icon: const Icon(Icons.help, size: 30),
                 onPressed: () {
-                  // TODO: Add functionality to show help dialog
+                  context.read<HomeBloc>().add(HomeAboutPressed());
                 },
               ),
             ],
