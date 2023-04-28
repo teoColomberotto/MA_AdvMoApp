@@ -62,7 +62,7 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
           emit(DatabaseScoreAdded(score: score));
         } on ScoreNameException {
           // todo - handle better excpetion by using internal name variable
-          emit(const DatabaseScoreNameAlreadyExists(name: "testname"));
+          emit(DatabaseScoreNameAlreadyExists(name: event.score.name));
         } catch (e) {
           debugPrint("Error: $e");
           emit(DatabaseError(message: e.toString()));
