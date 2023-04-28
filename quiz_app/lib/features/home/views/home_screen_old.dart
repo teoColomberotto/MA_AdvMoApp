@@ -5,9 +5,11 @@ import '../../../constants/enums.dart';
 import '../../quizz/bloc/quiz_bloc.dart';
 import '../../quizz/bloc/timer_bloc.dart';
 import '../../quizz/models/quiz_model.dart';
+import 'package:auto_route/auto_route.dart';
 
-class MyHomePage2 extends StatelessWidget {
-  const MyHomePage2({super.key, required this.title});
+@RoutePage()
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key, title}) : title = title ?? 'Home Screen';
   final String title;
   static Quiz quiz = Quiz();
 

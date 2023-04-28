@@ -5,22 +5,26 @@ class MyButton extends StatefulWidget {
   final String? text;
   final IconData? icon;
   final double fontSize;
-  final double padding;
+  final double paddingHeight;
+  final double paddingWidth;
   final double margin;
   final Color outlineColor;
   final Color backgroundColor;
   final Color textColor;
   final VoidCallback? onPressed;
   final bool disabled;
+  final double minWidth;
 
   const MyButton({
     Key? key,
     required this.text,
     this.icon,
-    this.fontSize = 18,
-    this.padding = 16,
+    this.fontSize = 14,
+    this.paddingHeight = 24,
+    this.paddingWidth = 8,
     this.margin = 8,
-    this.outlineColor = Colors.black,
+    this.minWidth = 150,
+    this.outlineColor = Colors.transparent,
     this.backgroundColor = Colors.blue,
     this.textColor = Colors.black,
     required this.onPressed,
@@ -38,7 +42,7 @@ class MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     final disabledColor = Colors.grey.shade400;
-    final textColor = widget.disabled ? disabledColor : Colors.white;
+    final textColor = widget.disabled ? disabledColor : widget.textColor;
     final borderColor = widget.disabled ? disabledColor : widget.outlineColor;
 
     return MouseRegion(
@@ -47,7 +51,7 @@ class MyButtonState extends State<MyButton> {
       child: GestureDetector(
         child: Material(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(15),
             side: BorderSide(color: borderColor, width: 1),
           ),
           borderOnForeground: false,
@@ -62,7 +66,11 @@ class MyButtonState extends State<MyButton> {
             onTapCancel: () => setState(() => _isPressed = false),
             onTapUp: (_) => setState(() => _isPressed = false),
             child: Container(
-              padding: EdgeInsets.all(widget.padding),
+              constraints: BoxConstraints(minWidth: widget.minWidth),
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(
+                  vertical: widget.paddingHeight,
+                  horizontal: widget.paddingWidth),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

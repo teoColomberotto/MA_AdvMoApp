@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-
-import 'features/home/views/home_screen_2.dart';
+import 'package:quiz_app/routes/app_router.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  MyApp({super.key});
+  final _appRouter = AppRouter();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         // fontFamily: 'Pokemon',
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage2(title: 'Testing a basic quiz structure'),
+      routerConfig: _appRouter.config(),
     );
   }
 }
