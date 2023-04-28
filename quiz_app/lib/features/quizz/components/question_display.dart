@@ -14,7 +14,15 @@ class MyQuestionDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<QuizBloc, QuizState>(builder: (context, quizState) {
+    return BlocBuilder<QuizBloc, QuizState>(buildWhen: (previous, current) {
+      if (current is QuizPaused ||
+          current is QuizResumed ||
+          current is QuizNavigateToHome) {
+        return false;
+      } else {
+        return true;
+      }
+    }, builder: (context, quizState) {
       if (quizState is QuizQuestionShown) {
         return _createInitialButtonsList(context, quizState);
       } else if (quizState is QuizQuestionValidated) {
@@ -48,10 +56,12 @@ class MyQuestionDisplay extends StatelessWidget {
               : null;
           return Column(children: [
             Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
               child: MyButton(
                 text: answer1[0],
-                backgroundColor: Colors.blue,
+                backgroundColor: const Color(0xFFF6C4BB),
+                textColor: Colors.deepOrange,
                 onPressed: () => context.read<QuizBloc>().add(
                     QuizQuestionAnswered(
                         currentQuestionIndex: quizState.currentQuestionIndex,
@@ -59,10 +69,12 @@ class MyQuestionDisplay extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
               child: MyButton(
                 text: answer2[0],
-                backgroundColor: Colors.blue,
+                backgroundColor: const Color(0xFFF6C4BB),
+                textColor: Colors.deepOrange,
                 onPressed: () => context.read<QuizBloc>().add(
                     QuizQuestionAnswered(
                         currentQuestionIndex: quizState.currentQuestionIndex,
@@ -90,24 +102,26 @@ class MyQuestionDisplay extends StatelessWidget {
               : null;
           return Column(children: [
             Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
               child: MyButton(
                 text: answer1[0],
                 backgroundColor:
                     int.parse(key_1) == question.answerChoosedByUser
                         ? Colors.green
-                        : Colors.blue,
+                        : Colors.white,
                 onPressed: () {},
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
               child: MyButton(
                 text: answer2[0],
                 backgroundColor:
                     int.parse(key_2) == question.answerChoosedByUser
                         ? Colors.green
-                        : Colors.blue,
+                        : Colors.white,
                 onPressed: () {},
               ),
             ),
@@ -132,7 +146,8 @@ class MyQuestionDisplay extends StatelessWidget {
               : null;
           return Column(children: [
             Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
               child: MyButton(
                 text: answer1[0],
                 backgroundColor:
@@ -140,12 +155,13 @@ class MyQuestionDisplay extends StatelessWidget {
                         ? Colors.red
                         : question.pokemon.answers[key_1][1] == true
                             ? Colors.green
-                            : Colors.blue,
+                            : Colors.white,
                 onPressed: () {},
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
               child: MyButton(
                 text: answer2[0],
                 backgroundColor:
@@ -153,7 +169,7 @@ class MyQuestionDisplay extends StatelessWidget {
                         ? Colors.red
                         : question.pokemon.answers[key_2][1] == true
                             ? Colors.green
-                            : Colors.blue,
+                            : Colors.white,
                 onPressed: () {},
               ),
             ),

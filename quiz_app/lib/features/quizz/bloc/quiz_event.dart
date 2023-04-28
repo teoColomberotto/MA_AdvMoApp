@@ -57,6 +57,26 @@ class QuizScoreSubmitted extends QuizEvent {
   List<Object> get props => [scoreName];
 }
 
+class QuizScoreIsValid extends QuizEvent {
+  final Score score;
+
+  const QuizScoreIsValid({required this.score});
+
+  @override
+  List<Object> get props => [score];
+}
+
+class QuizScoreIsNotValid extends QuizEvent {
+  final String scoreName;
+
+  const QuizScoreIsNotValid({required this.scoreName});
+
+  @override
+  List<Object> get props => [scoreName];
+}
+
+class QuizBackToHome extends QuizEvent {}
+
 class QuizScoreSkipped extends QuizEvent {}
 
 class QuizReset extends QuizEvent {}
@@ -69,3 +89,7 @@ class QuizTimerTick extends QuizEvent {
   @override
   List<Object> get props => [duration];
 }
+
+class QuizPause extends QuizEvent {}
+
+class QuizResume extends QuizEvent {}

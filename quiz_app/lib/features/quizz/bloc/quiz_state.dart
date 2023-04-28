@@ -64,6 +64,24 @@ class QuizScoreDisplayed extends QuizState {
   List<Object> get props => [quiz];
 }
 
+class QuizScoreValidated extends QuizState {
+  final Score score;
+
+  const QuizScoreValidated({required this.score});
+
+  @override
+  List<Object> get props => [score];
+}
+
+class QuizScoreNotValid extends QuizState {
+  final String scoreName;
+
+  const QuizScoreNotValid({required this.scoreName});
+
+  @override
+  List<Object> get props => [scoreName];
+}
+
 class QuizPokemonImageDisplayed extends QuizState {
   final Question question;
 
@@ -87,3 +105,9 @@ class QuizError extends QuizState {
 
   const QuizError({required this.message});
 }
+
+class QuizPaused extends QuizState {}
+
+class QuizResumed extends QuizState {}
+
+class QuizNavigateToHome extends QuizState {}

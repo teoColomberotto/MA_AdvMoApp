@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:mockito/mockito.dart';
+import 'package:quiz_app/constants/enums.dart';
 import 'package:quiz_app/features/database/models/leaderboard_model.dart';
 import 'package:quiz_app/features/database/models/pokemon_model.dart';
 import 'package:quiz_app/features/database/models/score_model.dart';
@@ -65,7 +66,8 @@ final mockPokemonListSnapshot = [
       2: ['ivysaur', false],
       3: ['venusaur', false],
       4: ['charmander', false],
-    }
+    },
+    'type': 'grass',
   },
   {
     'name': 'ivysaur',
@@ -76,7 +78,8 @@ final mockPokemonListSnapshot = [
       2: ['ivysaur', true],
       3: ['venusaur', false],
       4: ['charmander', false],
-    }
+    },
+    'type': 'grass',
   }
 ];
 
@@ -167,7 +170,8 @@ List<Pokemon> generatePokemonListFromSnapshot({required snapshot}) {
         answers: pokemonSnapshot['answers'],
         name: pokemonSnapshot['name'],
         pokedexId: pokemonSnapshot['pokedex_id'],
-        image: pokemonSnapshot['image']));
+        image: pokemonSnapshot['image'],
+        type: PokemonType.fromJson(pokemonSnapshot['type'])));
   }
 
   return pokemonsList;

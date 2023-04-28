@@ -53,6 +53,10 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     databaseSubscription = databaseBloc.stream.listen((databaseState) {
       if (databaseState is DatabasePokemonsListLoaded) {
         add(QuizCreate(databaseState.pokemons));
+      } else if (databaseState is DatabaseScoreAdded) {
+        add(QuizScoreIsValid(score: databaseState.score));
+      } else if (databaseState is DatabaseScoreNameAlreadyExists) {
+        add(QuizScoreIsNotValid(scoreName: databaseState.name));
       }
     });
     on<QuizEvent>((event, emit) {
@@ -80,6 +84,16 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         mapQuizResetToState(event, emit);
       } else if (event is QuizTimerTick) {
         mapQuizTimerTickToState(event, emit);
+      } else if (event is QuizPause) {
+        mapQuizPauseToState(event, emit);
+      } else if (event is QuizResume) {
+        mapQuizResumeToState(event, emit);
+      } else if (event is QuizBackToHome) {
+        mapQuizBackToHomeToState(event, emit);
+      } else if (event is QuizScoreIsValid) {
+        mapQuizScoreIsValidToState(event, emit);
+      } else if (event is QuizScoreIsNotValid) {
+        mapQuizScoreIsNotValidToState(event, emit);
       }
     });
   }
@@ -180,7 +194,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         name: event.scoreName, score: scorePoints, timestamp: DateTime.now());
     debugPrint('score submitted${score.name}');
     _quiz.score = score;
-    add(QuizReset());
+    databaseBloc.add(DatabaseAddScore(score: score));
   }
 
   void mapQuizScoreSkippedToState(
@@ -195,5 +209,30 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void mapQuizTimerTickToState(QuizTimerTick event, Emitter<QuizState> emit) {
     emit(QuizTimerRunning(duration: event.duration));
+  }
+
+  void mapQuizPauseToState(QuizPause event, Emitter<QuizState> emit) {
+    timerBloc.add(Pause());
+    emit(QuizPaused());
+  }
+
+  void mapQuizResumeToState(QuizResume event, Emitter<QuizState> emit) {
+    timerBloc.add(Resume());
+    emit(QuizResumed());
+  }
+
+  void mapQuizBackToHomeToState(QuizBackToHome event, Emitter<QuizState> emit) {
+    add(QuizPause());
+    emit(QuizNavigateToHome());
+  }
+
+  void mapQuizScoreIsValidToState(
+      QuizScoreIsValid event, Emitter<QuizState> emit) {
+    emit(QuizScoreValidated(score: event.score));
+  }
+
+  void mapQuizScoreIsNotValidToState(
+      QuizScoreIsNotValid event, Emitter<QuizState> emit) {
+    emit(QuizScoreNotValid(scoreName: event.scoreName));
   }
 }
