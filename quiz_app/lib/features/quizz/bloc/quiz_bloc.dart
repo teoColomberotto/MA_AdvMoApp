@@ -80,6 +80,12 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         mapQuizResetToState(event, emit);
       } else if (event is QuizTimerTick) {
         mapQuizTimerTickToState(event, emit);
+      } else if (event is QuizPause) {
+        mapQuizPauseToState(event, emit);
+      } else if (event is QuizResume) {
+        mapQuizResumeToState(event, emit);
+      } else if (event is QuizBackToHome) {
+        mapQuizBackToHomeToState(event, emit);
       }
     });
   }
@@ -195,5 +201,20 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void mapQuizTimerTickToState(QuizTimerTick event, Emitter<QuizState> emit) {
     emit(QuizTimerRunning(duration: event.duration));
+  }
+
+  void mapQuizPauseToState(QuizPause event, Emitter<QuizState> emit) {
+    timerBloc.add(Pause());
+    emit(QuizPaused());
+  }
+
+  void mapQuizResumeToState(QuizResume event, Emitter<QuizState> emit) {
+    timerBloc.add(Resume());
+    emit(QuizResumed());
+  }
+
+  void mapQuizBackToHomeToState(QuizBackToHome event, Emitter<QuizState> emit) {
+    add(QuizPause());
+    emit(QuizNavigateToHome());
   }
 }

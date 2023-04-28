@@ -17,7 +17,7 @@ class QuizScoreForm extends StatelessWidget {
     return BlocConsumer<QuizBloc, QuizState>(
       listener: (context, state) {
         if (state is QuizInitial) {
-          context.router.replaceNamed('/home');
+          context.router.popUntilRoot();
         }
       },
       builder: (context, state) {

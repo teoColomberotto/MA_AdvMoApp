@@ -19,37 +19,85 @@ class QuizScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocConsumer<QuizBloc, QuizState>(builder: (context, state) {
-      if (state is QuizLoading) {
-        return _mapLoadingStateToUi(context, state);
-      } else if (state is QuizError) {
-        return _mapErrorStateToUi(context, state);
-      } else if (state is QuizFinished) {
-        return _mapFinishedStateToUi(context, state);
-      } else if (state is QuizQuestionShown) {
-        return _mapQuestionShowStateToUi(context);
-      } else if (state is QuizQuestionValidated) {
-        return _mapQuestionValidatedStateToUi(context);
-      } else if (state is QuizScoreDisplayed) {
-        return _mapScoreDisplayedStateToUi(context);
-      } else if (state is QuizPokemonImageDisplayed) {
-        return _mapPokemonImageDisplayedStateToUi(context);
-      } else if (state is QuizFinished) {
-        return _mapFinishedStateToUi(context, state);
-      } else {
-        return const Center(
-            child: Text('Something went wrong, please try again'));
-      }
-    }, listener: (context, state) {
-      if (state is QuizLoaded) {
-        _quiz = state.quiz;
-      } else if (state is QuizTimerRunning) {
-        debugPrint('Quiz timer running!${state.duration}');
-      } else if (state is QuizFinished) {
-        //navigate to quiz recap
-        context.router.pushNamed('/quiz/recap');
-      }
-    }));
+        appBar: AppBar(
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.red,
+          elevation: 0,
+          title: Image.asset(
+            'assets/images/pokemonBrand-logo.png',
+            fit: BoxFit.contain,
+            height: 32,
+          ),
+          leading: IconButton(
+            splashRadius: 25.0,
+            splashColor: Colors.orangeAccent,
+            icon: const Icon(Icons.chevron_left, size: 30),
+            onPressed: () {
+              context.read<QuizBloc>().add(QuizBackToHome());
+            },
+          ),
+        ),
+        body: BlocConsumer<QuizBloc, QuizState>(buildWhen: (previous, current) {
+          if (current is QuizPaused ||
+              current is QuizResumed ||
+              current is QuizNavigateToHome) {
+            return false;
+          } else {
+            return true;
+          }
+        }, builder: (context, state) {
+          if (state is QuizLoading) {
+            return _mapLoadingStateToUi(context, state);
+          } else if (state is QuizError) {
+            return _mapErrorStateToUi(context, state);
+          } else if (state is QuizFinished) {
+            return _mapFinishedStateToUi(context, state);
+          } else if (state is QuizQuestionShown) {
+            return _mapQuestionShowStateToUi(context);
+          } else if (state is QuizQuestionValidated) {
+            return _mapQuestionValidatedStateToUi(context);
+          } else if (state is QuizScoreDisplayed) {
+            return _mapScoreDisplayedStateToUi(context);
+          } else if (state is QuizPokemonImageDisplayed) {
+            return _mapPokemonImageDisplayedStateToUi(context);
+          } else if (state is QuizFinished) {
+            return _mapFinishedStateToUi(context, state);
+          } else {
+            return const Center(
+                child: Text('Something went wrong, please try again'));
+          }
+        }, listener: (context, state) {
+          if (state is QuizLoaded) {
+            _quiz = state.quiz;
+          } else if (state is QuizTimerRunning) {
+            debugPrint('Quiz timer running!${state.duration}');
+          } else if (state is QuizFinished) {
+            context.router.pushNamed('/quiz/recap');
+          } else if (state is QuizNavigateToHome) {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      title: const Text('Are you sure?'),
+                      content: const Text(
+                          'If you go back to home, the quiz will finish and your current progress will be lost.'),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              context.router.pop();
+                              context.read<QuizBloc>().add(QuizResume());
+                            },
+                            child: const Text('Cancel')),
+                        TextButton(
+                            onPressed: () {
+                              context.router.popUntilRoot();
+                              context.read<QuizBloc>().add(QuizReset());
+                            },
+                            child: const Text('Go back to home'))
+                      ],
+                    ));
+          }
+        }));
   }
 
   Widget _mapLoadingStateToUi(BuildContext context, QuizLoading state) {
@@ -118,7 +166,6 @@ class QuizScreen extends StatelessWidget {
                   MyPokemonImage(
                       imageData: _quiz.currentQuestion.pokemonImage.imageData,
                       show: false),
-                  const Spacer(flex: 1),
                   MyQuestionDisplay(question: _quiz.currentQuestion),
                   const Spacer(flex: 1),
                 ]),
@@ -145,7 +192,6 @@ class QuizScreen extends StatelessWidget {
               MyPokemonImage(
                   imageData: _quiz.currentQuestion.pokemonImage.imageData,
                   show: true),
-              const Spacer(flex: 1),
               MyQuestionDisplay(question: _quiz.currentQuestion),
               const Spacer(flex: 1),
             ]),

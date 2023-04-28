@@ -14,7 +14,15 @@ class MyQuestionDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<QuizBloc, QuizState>(builder: (context, quizState) {
+    return BlocBuilder<QuizBloc, QuizState>(buildWhen: (previous, current) {
+      if (current is QuizPaused ||
+          current is QuizResumed ||
+          current is QuizNavigateToHome) {
+        return false;
+      } else {
+        return true;
+      }
+    }, builder: (context, quizState) {
       if (quizState is QuizQuestionShown) {
         return _createInitialButtonsList(context, quizState);
       } else if (quizState is QuizQuestionValidated) {

@@ -57,6 +57,8 @@ class QuizScoreSubmitted extends QuizEvent {
   List<Object> get props => [scoreName];
 }
 
+class QuizBackToHome extends QuizEvent {}
+
 class QuizScoreSkipped extends QuizEvent {}
 
 class QuizReset extends QuizEvent {}
@@ -69,3 +71,7 @@ class QuizTimerTick extends QuizEvent {
   @override
   List<Object> get props => [duration];
 }
+
+class QuizPause extends QuizEvent {}
+
+class QuizResume extends QuizEvent {}

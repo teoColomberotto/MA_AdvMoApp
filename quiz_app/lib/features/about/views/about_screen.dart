@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quiz_app/features/leaderboard/bloc/leaderboard_bloc.dart';
 
 import '../bloc/about_bloc.dart';
 

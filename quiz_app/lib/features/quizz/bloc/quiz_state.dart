@@ -87,3 +87,9 @@ class QuizError extends QuizState {
 
   const QuizError({required this.message});
 }
+
+class QuizPaused extends QuizState {}
+
+class QuizResumed extends QuizState {}
+
+class QuizNavigateToHome extends QuizState {}
