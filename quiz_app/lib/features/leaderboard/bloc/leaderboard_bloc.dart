@@ -7,7 +7,16 @@ part 'leaderboard_state.dart';
 class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
   LeaderboardBloc() : super(LeaderboardInitial()) {
     on<LeaderboardEvent>((event, emit) {
-      // TODO: implement event handler
+      if (event is LeaderboardHomePressed) {
+        _mapLeaderboardHomePressedToState(event, emit);
+      } else if (event is LeaderboardResetState) {
+        emit(LeaderboardInitial());
+      }
     });
+  }
+
+  void _mapLeaderboardHomePressedToState(
+      LeaderboardHomePressed event, Emitter<LeaderboardState> emit) {
+    emit(LeaderboardHomeButtonPressed());
   }
 }

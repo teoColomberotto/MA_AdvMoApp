@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:quiz_app/features/home/bloc/bloc/home_bloc.dart';
+import 'features/about/bloc/about_bloc.dart';
+import 'features/leaderboard/bloc/leaderboard_bloc.dart';
 import 'features/quizz/bloc/quiz_bloc.dart';
 import 'features/quizz/bloc/timer_bloc.dart';
 import 'features/quizz/models/ticker_model.dart';
@@ -41,6 +43,8 @@ void main() async {
                 storageBloc: context.read<StorageBloc>())),
         BlocProvider(
             create: (context) => HomeBloc(quizBloc: context.read<QuizBloc>())),
+        BlocProvider(create: (context) => LeaderboardBloc()),
+        BlocProvider(create: (context) => AboutBloc()),
       ],
       child: MyApp(),
     ),

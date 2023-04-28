@@ -6,3 +6,7 @@ abstract class LeaderboardEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class LeaderboardHomePressed extends LeaderboardEvent {}
+
+class LeaderboardResetState extends LeaderboardEvent {}
