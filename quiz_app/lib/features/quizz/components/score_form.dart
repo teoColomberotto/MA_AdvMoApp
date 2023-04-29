@@ -58,6 +58,8 @@ class _QuizScoreFormState extends State<QuizScoreForm> {
                     errorStyle: TextStyle(color: MyColors.myBlack),
                     enabledBorder:
                         const OutlineInputBorder(borderSide: BorderSide.none),
+                    errorBorder:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
                   ),
                 ),
               ),

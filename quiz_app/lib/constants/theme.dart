@@ -184,14 +184,14 @@ class MyTheme {
           color: MyColors.myTertiaryColor,
         ),
       ),
-      errorBorder: OutlineInputBorder(
+      errorBorder: const OutlineInputBorder(
         borderSide: BorderSide(
-          color: MyColors.myErrorColor,
+          color: Colors.transparent,
         ),
       ),
-      focusedErrorBorder: OutlineInputBorder(
+      focusedErrorBorder: const OutlineInputBorder(
         borderSide: BorderSide(
-          color: MyColors.myErrorColor,
+          color: Colors.transparent,
         ),
       ),
       labelStyle: TextStyle(
