@@ -38,6 +38,8 @@ dependencies:
   auto_route: ^6.3.0
   auto_route_generator: ^6.2.0
   flutter_native_splash: ^2.2.19
+  flutter_keyboard_visibility: ^5.4.1
+
 
 
 dev_dependencies:

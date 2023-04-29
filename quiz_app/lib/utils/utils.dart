@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/constants/colors.dart';
 import 'package:quiz_app/constants/enums.dart';
 
 Color mapBackgroundColorToPokemonType(PokemonType type) {
@@ -54,4 +55,10 @@ Color hexToColor(String hex) {
     int.parse(hex.substring(1), radix: 16) +
         (hex.length == 7 ? 0xff000000 : 0x00000000),
   );
+}
+
+Color getFontColorForBackground(Color background) {
+  return (background.computeLuminance() > 0.5)
+      ? MyColors.myBlack
+      : MyColors.myWhite;
 }

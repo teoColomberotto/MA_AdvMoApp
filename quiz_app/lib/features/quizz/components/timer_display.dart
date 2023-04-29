@@ -3,17 +3,23 @@ import 'package:quiz_app/constants/colors.dart';
 
 import 'package:quiz_app/constants/constants.dart' as constants;
 
+import '../../../utils/utils.dart';
+
 class MyTimerDisplay extends StatelessWidget {
   final int timeRemaining;
   final int totalTime = constants.timerDuration;
 
+  final Color background;
+
   const MyTimerDisplay({
     super.key,
     required this.timeRemaining,
+    required this.background,
   });
 
   @override
   Widget build(BuildContext context) {
+    final Color barColor = getFontColorForBackground(background);
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -26,8 +32,7 @@ class MyTimerDisplay extends StatelessWidget {
               child: LinearProgressIndicator(
                 backgroundColor: Colors.transparent,
                 value: timeRemaining / totalTime,
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(MyColors.mySecondaryColor),
+                valueColor: AlwaysStoppedAnimation<Color>(barColor),
               ),
             ),
           ),
@@ -35,7 +40,10 @@ class MyTimerDisplay extends StatelessWidget {
         Center(
           child: Text(
             timeRemaining.toString(),
-            style: const TextStyle(
+            style: TextStyle(
+              color: barColor == MyColors.myWhite
+                  ? MyColors.myBlack
+                  : MyColors.myWhite,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),

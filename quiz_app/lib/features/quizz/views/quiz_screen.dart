@@ -8,6 +8,7 @@ import 'package:quiz_app/features/quizz/components/quiz_actions_background.dart'
 import 'package:quiz_app/features/quizz/components/timer_display.dart';
 
 import '../../../constants/colors.dart';
+import '../../../constants/enums.dart';
 import '../../../utils/utils.dart';
 import '../bloc/quiz_bloc.dart';
 import '../bloc/timer_bloc.dart';
@@ -85,11 +86,13 @@ class QuizScreen extends StatelessWidget {
   }
 
   Widget _mapLoadingStateToUi(BuildContext context, QuizLoading state) {
+    final Color backgroundColor = MyColors.myBackgroundColor;
+    final Color backIconColor = getFontColorForBackground(backgroundColor);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
-        backgroundColor: MyColors.myBackgroundColor,
+        backgroundColor: backgroundColor,
         elevation: 0,
         title: Image.asset(
           'assets/images/pokemonBrand-logo.png',
@@ -97,7 +100,7 @@ class QuizScreen extends StatelessWidget {
           height: 32,
         ),
         leading: IconButton(
-          color: MyColors.myBlack,
+          color: backIconColor,
           splashRadius: 25.0,
           splashColor: MyColors.myOrangeAccent,
           icon: const Icon(Icons.chevron_left, size: 30),
@@ -165,6 +168,10 @@ class QuizScreen extends StatelessWidget {
       BuildContext context, QuizQuestionShown state) {
     return BlocBuilder<TimerBloc, TimerState>(
       builder: (context, timerState) {
+        final PokemonType pokemonType = _quiz.currentQuestion.pokemon.type;
+        final Color backgroundColor =
+            mapBackgroundColorToPokemonType(pokemonType);
+        final Color backIconColor = getFontColorForBackground(backgroundColor);
         return Scaffold(
             appBar: AppBar(
               centerTitle: true,
@@ -177,7 +184,7 @@ class QuizScreen extends StatelessWidget {
                 height: 32,
               ),
               leading: IconButton(
-                color: MyColors.myTertiaryColor,
+                color: backIconColor,
                 splashRadius: 25.0,
                 splashColor: MyColors.myOrangeAccent,
                 icon: const Icon(Icons.chevron_left, size: 30),
@@ -223,7 +230,9 @@ class QuizScreen extends StatelessWidget {
                             Positioned(
                                 bottom: 20,
                                 child: MyTimerDisplay(
-                                    timeRemaining: timerState.duration)),
+                                  timeRemaining: timerState.duration,
+                                  background: backgroundColor,
+                                )),
                           ]),
                         ),
                       ]),
@@ -236,6 +245,9 @@ class QuizScreen extends StatelessWidget {
 
   Widget _mapQuestionValidatedStateToUi(
       BuildContext context, QuizQuestionValidated state) {
+    final PokemonType pokemonType = _quiz.currentQuestion.pokemon.type;
+    final Color backgroundColor = mapBackgroundColorToPokemonType(pokemonType);
+    final Color backIconColor = getFontColorForBackground(backgroundColor);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -249,7 +261,7 @@ class QuizScreen extends StatelessWidget {
             height: 32,
           ),
           leading: IconButton(
-            color: Colors.black,
+            color: backIconColor,
             splashRadius: 25.0,
             splashColor: Colors.orangeAccent,
             icon: const Icon(Icons.chevron_left, size: 30),

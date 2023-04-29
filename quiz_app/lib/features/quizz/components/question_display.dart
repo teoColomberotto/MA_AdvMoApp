@@ -59,7 +59,7 @@ class MyQuestionDisplay extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             child: MyButton(
-              text: answer[0],
+              text: answer[0].toString().toUpperCase(),
               backgroundColor: MyColors.myWhite,
               textColor: MyColors.myOnTertiaryColor,
               onPressed: () => context.read<QuizBloc>().add(
@@ -90,7 +90,7 @@ class MyQuestionDisplay extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             child: MyButton(
-              text: answer[0],
+              text: answer[0].toString().toUpperCase(),
               backgroundColor: int.parse(key) == question.answerChoosedByUser
                   ? Colors.green
                   : MyColors.myWhite,
@@ -122,7 +122,7 @@ class MyQuestionDisplay extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
             child: MyButton(
-              text: answer[0],
+              text: answer[0].toString().toUpperCase(),
               backgroundColor: int.parse(key) == question.answerChoosedByUser
                   ? Colors.red
                   : question.pokemon.answers[key][1] == true

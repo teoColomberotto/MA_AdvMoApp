@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_app/common_widgets/my_button.dart';
 
+import '../../../constants/colors.dart';
 import '../bloc/quiz_bloc.dart';
 import '../models/quiz_model.dart';
 
 class QuizScoreForm extends StatefulWidget {
   final Quiz quiz;
   const QuizScoreForm({super.key, required this.quiz});
-
   @override
   State<QuizScoreForm> createState() => _QuizScoreFormState();
 }
@@ -32,17 +32,33 @@ class _QuizScoreFormState extends State<QuizScoreForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Insert your name',
-                  border: OutlineInputBorder(),
+              Text('Submit your score',
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      color: MyColors.mySecondaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25)),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: MyColors.myTertiaryColor,
+                ),
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your name';
+                    }
+                    return null;
+                  },
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    fillColor: Colors.transparent,
+                    labelText: 'Insert your name',
+                    errorStyle: TextStyle(color: MyColors.myBlack),
+                    enabledBorder:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -50,6 +66,8 @@ class _QuizScoreFormState extends State<QuizScoreForm> {
                 children: [
                   Expanded(
                       child: MyButton(
+                    backgroundColor: MyColors.myBlack,
+                    textColor: MyColors.myWhite,
                     text: 'Skip',
                     onPressed: () => context.read<QuizBloc>().add(QuizReset()),
                   )),
@@ -57,6 +75,8 @@ class _QuizScoreFormState extends State<QuizScoreForm> {
                   Expanded(
                       child: MyButton(
                           text: 'Submit',
+                          backgroundColor: MyColors.myTertiaryColor,
+                          textColor: MyColors.myOnTertiaryColor,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               context.read<QuizBloc>().add(QuizScoreSubmitted(

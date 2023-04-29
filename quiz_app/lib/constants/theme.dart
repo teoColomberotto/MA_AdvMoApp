@@ -37,6 +37,10 @@ class MyTheme {
       ),
     ),
 
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: MyColors.myBlack,
+    ),
+
     //Text
     textTheme: TextTheme(
       displayLarge: TextStyle(
@@ -159,6 +163,45 @@ class MyTheme {
       elevation: 10,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+
+    //Text field
+    inputDecorationTheme: InputDecorationTheme(
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
+      filled: true,
+      fillColor: MyColors.myTertiaryColor,
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: MyColors.myTertiaryColor,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: MyColors.myTertiaryColor,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: MyColors.myErrorColor,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: MyColors.myErrorColor,
+        ),
+      ),
+      labelStyle: TextStyle(
+        color: MyColors.myBlack,
+      ),
+      hintStyle: TextStyle(
+        color: MyColors.myTertiaryColor,
+      ),
+      errorStyle: TextStyle(
+        color: MyColors.myErrorColor,
       ),
     ),
 
