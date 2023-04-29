@@ -74,9 +74,18 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                     ]),
                   );
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
+                  return Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        const MyLeaderboardTitle(),
+                        const SizedBox(height: 20),
+                        const Spacer(),
+                        CircularProgressIndicator(
+                          color: MyColors.myWhite,
+                        ),
+                        const Spacer(flex: 1),
+                      ],
                     ),
                   );
                 }
