@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_app/common_widgets/my_button.dart';
 import 'package:quiz_app/features/quizz/components/current_question.dart';
 import 'package:quiz_app/features/quizz/components/image_display.dart';
+import 'package:quiz_app/features/quizz/components/quiz_actions_background.dart';
 import 'package:quiz_app/features/quizz/components/timer_display.dart';
 
+import '../../../constants/colors.dart';
 import '../../../utils/utils.dart';
 import '../bloc/quiz_bloc.dart';
 import '../bloc/timer_bloc.dart';
@@ -87,7 +89,7 @@ class QuizScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
+        backgroundColor: MyColors.myBackgroundColor,
         elevation: 0,
         title: Image.asset(
           'assets/images/pokemonBrand-logo.png',
@@ -95,9 +97,9 @@ class QuizScreen extends StatelessWidget {
           height: 32,
         ),
         leading: IconButton(
-          color: Colors.black,
+          color: MyColors.myBlack,
           splashRadius: 25.0,
-          splashColor: Colors.orangeAccent,
+          splashColor: MyColors.myOrangeAccent,
           icon: const Icon(Icons.chevron_left, size: 30),
           onPressed: () {
             context.read<QuizBloc>().add(QuizBackToHome());
@@ -105,7 +107,8 @@ class QuizScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(color: Colors.red),
+        decoration:
+            BoxDecoration(gradient: MyColorsGradients.myBackgroundRedGradient),
         child: SafeArea(
           child: Center(
             child: Column(
@@ -118,8 +121,7 @@ class QuizScreen extends StatelessWidget {
                 const Spacer(
                   flex: 1,
                 ),
-                Text(state.message,
-                    style: const TextStyle(color: Colors.white)),
+                Text(state.message, style: TextStyle(color: MyColors.myWhite)),
                 const Spacer(
                   flex: 1,
                 )
@@ -140,9 +142,9 @@ class QuizScreen extends StatelessWidget {
             const Spacer(
               flex: 1,
             ),
-            const Icon(
+            Icon(
               Icons.error,
-              color: Colors.red,
+              color: MyColors.myErrorColor,
               size: 50,
             ),
             Text(state.message),
@@ -167,7 +169,7 @@ class QuizScreen extends StatelessWidget {
             appBar: AppBar(
               centerTitle: true,
               automaticallyImplyLeading: false,
-              backgroundColor: Colors.red,
+              backgroundColor: MyColors.myBackgroundColor,
               elevation: 0,
               title: Image.asset(
                 'assets/images/pokemonBrand-logo.png',
@@ -175,9 +177,9 @@ class QuizScreen extends StatelessWidget {
                 height: 32,
               ),
               leading: IconButton(
-                color: Colors.black,
+                color: MyColors.myTertiaryColor,
                 splashRadius: 25.0,
-                splashColor: Colors.orangeAccent,
+                splashColor: MyColors.myOrangeAccent,
                 icon: const Icon(Icons.chevron_left, size: 30),
                 onPressed: () {
                   context.read<QuizBloc>().add(QuizBackToHome());
@@ -185,20 +187,15 @@ class QuizScreen extends StatelessWidget {
               ),
             ),
             body: Container(
-              decoration: const BoxDecoration(color: Colors.red),
+              decoration: BoxDecoration(
+                  gradient: MyColorsGradients.myBackgroundRedGradient),
               child: SafeArea(
                 child: Center(
                   child: Stack(
                       alignment: AlignmentDirectional.bottomCenter,
                       children: [
-                        Container(
-                          height: 500,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(50),
-                                topRight: Radius.circular(50)),
-                            color: Colors.deepOrange.withOpacity(1),
-                          ),
+                        MyQuizActionsBackground(
+                          backgroundColor: MyColors.myWhite,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -219,7 +216,6 @@ class QuizScreen extends StatelessWidget {
                               ),
                               MyQuestionDisplay(
                                   question: _quiz.currentQuestion),
-                              const Spacer(flex: 1),
                             ]),
                             Positioned(
                                 bottom: 100,
@@ -272,14 +268,8 @@ class QuizScreen extends StatelessWidget {
               child: Stack(
                   alignment: AlignmentDirectional.bottomCenter,
                   children: [
-                    Container(
-                      height: 500,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(50),
-                            topRight: Radius.circular(50)),
-                        color: Colors.white.withOpacity(0.3),
-                      ),
+                    MyQuizActionsBackground(
+                      backgroundColor: MyColors.myWhite,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -299,7 +289,6 @@ class QuizScreen extends StatelessWidget {
                             height: 40,
                           ),
                           MyQuestionDisplay(question: _quiz.currentQuestion),
-                          const Spacer(flex: 1),
                         ]),
                         Positioned(
                             bottom: 100,

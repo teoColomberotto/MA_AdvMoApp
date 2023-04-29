@@ -72,9 +72,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                         height: 400,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Expanded(
-                              child: MyLeaderboardDisplay(
-                                  leaderboard: state.leaderboard)),
+                          child: MyLeaderboardDisplay(
+                              leaderboard: state.leaderboard),
                         ),
                       ),
                       const Spacer(flex: 1),

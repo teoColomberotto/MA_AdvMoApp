@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/constants/colors.dart';
 
 import 'package:quiz_app/constants/constants.dart' as constants;
 
@@ -25,7 +26,8 @@ class MyTimerDisplay extends StatelessWidget {
               child: LinearProgressIndicator(
                 backgroundColor: Colors.transparent,
                 value: timeRemaining / totalTime,
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(MyColors.mySecondaryColor),
               ),
             ),
           ),
