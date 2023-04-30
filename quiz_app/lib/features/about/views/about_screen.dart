@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quiz_app/features/about/components/about_title.dart';
+import 'package:quiz_app/features/about/components/how_to_play.dart';
 
+import '../../../constants/colors.dart';
 import '../bloc/about_bloc.dart';
 
 @RoutePage()
@@ -24,7 +27,7 @@ class AboutScreen extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.red,
+          backgroundColor: MyColors.myBackgroundColor,
           elevation: 0,
           title: Image.asset(
             'assets/images/pokemonBrand-logo.png',
@@ -41,17 +44,14 @@ class AboutScreen extends StatelessWidget {
           ),
         ),
         body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.red, Colors.deepOrange],
-            ),
+          decoration: BoxDecoration(
+            gradient: MyColorsGradients.myBackgroundRedGradient,
           ),
           child: SafeArea(
             child: Center(
-                child: Column(
-              children: [],
+                child: Stack(
+              alignment: AlignmentDirectional.topStart,
+              children: const [MyAboutTitle(), MyHowToPlay()],
             )),
           ),
         ),
