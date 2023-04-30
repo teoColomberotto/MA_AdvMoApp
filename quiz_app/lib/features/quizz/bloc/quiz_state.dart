@@ -111,3 +111,7 @@ class QuizPaused extends QuizState {}
 class QuizResumed extends QuizState {}
 
 class QuizNavigateToHome extends QuizState {}
+
+class QuizPausedDueToNoInternetConnection extends QuizState {}
+
+class QuizInternetConnectionRestored extends QuizState {}

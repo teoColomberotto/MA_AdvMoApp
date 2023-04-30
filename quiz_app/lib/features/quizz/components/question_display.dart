@@ -18,7 +18,9 @@ class MyQuestionDisplay extends StatelessWidget {
     return BlocBuilder<QuizBloc, QuizState>(buildWhen: (previous, current) {
       if (current is QuizPaused ||
           current is QuizResumed ||
-          current is QuizNavigateToHome) {
+          current is QuizNavigateToHome ||
+          current is QuizPausedDueToNoInternetConnection ||
+          current is QuizInternetConnectionRestored) {
         return false;
       } else {
         return true;

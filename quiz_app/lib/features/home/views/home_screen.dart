@@ -28,6 +28,14 @@ class HomeScreen extends StatelessWidget {
           } else if (state is HomeAboutButtonPressed) {
             context.router.pushNamed('/about');
             context.read<HomeBloc>().add(HomeResetState());
+          } else if (state is HomeQuizStartRefused) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                duration: const Duration(seconds: 4),
+              ),
+            );
+            context.read<HomeBloc>().add(HomeResetState());
           }
         },
         child: Scaffold(
