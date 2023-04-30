@@ -9,7 +9,15 @@ import '../bloc/about_bloc.dart';
 
 @RoutePage()
 class AboutScreen extends StatelessWidget {
-  const AboutScreen({super.key});
+  AboutScreen({super.key});
+
+  final listChildren = <SliverList>[
+    SliverList(
+        delegate: SliverChildListDelegate([
+      const MyAboutTitle(),
+      const SizedBox(height: 650, child: MyHowToPlay()),
+    ]))
+  ];
 
   //create a widget called AboutScreen
   @override
@@ -49,9 +57,9 @@ class AboutScreen extends StatelessWidget {
           ),
           child: SafeArea(
             child: Center(
-                child: Stack(
-              alignment: AlignmentDirectional.topStart,
-              children: const [MyAboutTitle(), MyHowToPlay()],
+                child: CustomScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              slivers: listChildren,
             )),
           ),
         ),

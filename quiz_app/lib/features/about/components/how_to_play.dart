@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/features/about/components/how_to_play_title.dart';
 
+import '../../../common_widgets/my_button.dart';
 import '../../../constants/colors.dart';
 
 class MyHowToPlay extends StatefulWidget {
@@ -14,18 +16,11 @@ class MyHowToPlayState extends State<MyHowToPlay> {
 
   int _currentPageIndex = 0;
 
-  final List<String> _pageTitles = [
-    'Page 1',
-    'Page 2',
-    'Page 3',
-    'Page 4',
-  ];
-
   final List<Widget> _pages = [
-    Page1(),
-    Page2(),
-    Page3(),
-    Page4(),
+    HowToStart(),
+    HowToChoose(),
+    HowToTimer(),
+    HowToScore(),
   ];
 
   @override
@@ -37,6 +32,8 @@ class MyHowToPlayState extends State<MyHowToPlay> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
@@ -61,7 +58,7 @@ class MyHowToPlayState extends State<MyHowToPlay> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (var i = 0; i < _pageTitles.length; i++)
+                  for (var i = 0; i < _pages.length; i++)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Icon(
@@ -108,21 +105,98 @@ class MyHowToPlayState extends State<MyHowToPlay> {
   }
 }
 
-class Page1 extends StatelessWidget {
+class HowToStart extends StatelessWidget {
+  const HowToStart({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        color: Colors.transparent,
-        child: Center(
-          child: Text('Page 1'),
-        ),
-      ),
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: Column(
+                children: [
+                  const Spacer(),
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: MyColors.myBlack, width: 2),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '1',
+                        style:
+                            Theme.of(context).textTheme.headlineLarge!.copyWith(
+                                  color: MyColors.myBlack,
+                                ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  const MyHowToPlayTitle(title: 'Start a new play'),
+                  const SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      MyButton(
+                        onPressed: () {},
+                        text: 'PLAY',
+                        backgroundColor: MyColors.myTertiaryColor,
+                        textColor: MyColors.myOnTertiaryColor,
+                      ),
+                      MyButton(
+                        onPressed: () {},
+                        text: 'LEADERBOARD',
+                        textColor: MyColors.myWhite,
+                        backgroundColor: MyColors.myBlack,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: const [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Text(
+                          'Start a new game by pressing on the play button',
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Text(
+                          'Feel free to navigato to the leaderboard to see other players scores',
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 36),
+                  const Text(
+                    'Please, mind that an active and working intenret connection is required to properly start a new play. Check your internet settings.',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ),
+          )),
     );
   }
 }
 
-class Page2 extends StatelessWidget {
+class HowToChoose extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -136,7 +210,7 @@ class Page2 extends StatelessWidget {
   }
 }
 
-class Page3 extends StatelessWidget {
+class HowToTimer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -150,7 +224,7 @@ class Page3 extends StatelessWidget {
   }
 }
 
-class Page4 extends StatelessWidget {
+class HowToScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
