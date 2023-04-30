@@ -23,7 +23,7 @@ flutter pub get
 
 **Step 3:**
 
-This project uses `inject` library that works with code generation, execute the following command to generate files:
+This project uses `auto_route` package that works with code generation, execute the following command to generate files:
 
 ```
 flutter packages pub run build_runner build 
