@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_app/common_widgets/my_button.dart';
+import 'package:quiz_app/constants/colors.dart';
 import 'package:quiz_app/features/home/components/home_title.dart';
 
 import '../bloc/bloc/home_bloc.dart';
@@ -33,7 +34,7 @@ class HomeScreen extends StatelessWidget {
           appBar: AppBar(
             centerTitle: true,
             automaticallyImplyLeading: false,
-            backgroundColor: Colors.red,
+            backgroundColor: MyColors.myBackgroundColor,
             elevation: 0,
             title: Image.asset(
               'assets/images/pokemonBrand-logo.png',
@@ -43,7 +44,8 @@ class HomeScreen extends StatelessWidget {
             actions: [
               IconButton(
                 splashRadius: 25.0,
-                splashColor: Colors.orangeAccent,
+                color: MyColors.myTertiaryColor,
+                splashColor: MyColors.myOrangeAccent,
                 icon: const Icon(Icons.help, size: 30),
                 onPressed: () {
                   context.read<HomeBloc>().add(HomeAboutPressed());
@@ -52,12 +54,8 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.red, Colors.deepOrange],
-              ),
+            decoration: BoxDecoration(
+              gradient: MyColorsGradients.myBackgroundRedGradient,
             ),
             child: SafeArea(
               child: Center(
@@ -78,8 +76,8 @@ class HomeScreen extends StatelessWidget {
                             onPressed: () =>
                                 context.read<HomeBloc>().add(HomePlayPressed()),
                             text: 'PLAY',
-                            backgroundColor: const Color(0xFFF6C4BB),
-                            textColor: Colors.red,
+                            backgroundColor: MyColors.myTertiaryColor,
+                            textColor: MyColors.myOnTertiaryColor,
                           ),
                           const SizedBox(width: 20),
                           MyButton(
@@ -87,8 +85,8 @@ class HomeScreen extends StatelessWidget {
                                 .read<HomeBloc>()
                                 .add(HomeLeaderboardPressed()),
                             text: 'LEADERBOARD',
-                            textColor: Colors.white,
-                            backgroundColor: Colors.black,
+                            textColor: MyColors.myWhite,
+                            backgroundColor: MyColors.myBlack,
                           ),
                         ],
                       ),

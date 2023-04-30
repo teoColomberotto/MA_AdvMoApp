@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quiz_app/constants/colors.dart';
 import 'package:quiz_app/features/leaderboard/components/leaderboard_title.dart';
 
 import '../bloc/leaderboard_bloc.dart';
@@ -35,7 +36,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         appBar: AppBar(
           centerTitle: true,
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.red,
+          backgroundColor: MyColors.myBackgroundColor,
           elevation: 0,
           title: Image.asset(
             'assets/images/pokemonBrand-logo.png',
@@ -53,37 +54,38 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         ),
         body: SafeArea(
           child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.red, Colors.deepOrange],
-              ),
-            ),
+            decoration: BoxDecoration(
+                gradient: MyColorsGradients.myBackgroundRedGradient),
             child: BlocBuilder<LeaderboardBloc, LeaderboardState>(
               builder: (context, state) {
                 if (state is LeaderboardDisplayed) {
                   return Center(
                     child: Column(children: [
-                      const Spacer(flex: 1),
+                      const SizedBox(height: 20),
                       const MyLeaderboardTitle(),
-                      const Spacer(flex: 1),
-                      SizedBox(
-                        height: 400,
+                      const SizedBox(height: 20),
+                      Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Expanded(
-                              child: MyLeaderboardDisplay(
-                                  leaderboard: state.leaderboard)),
+                          child: MyLeaderboardDisplay(
+                              leaderboard: state.leaderboard),
                         ),
                       ),
-                      const Spacer(flex: 1),
                     ]),
                   );
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
+                  return Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        const MyLeaderboardTitle(),
+                        const SizedBox(height: 20),
+                        const Spacer(),
+                        CircularProgressIndicator(
+                          color: MyColors.myWhite,
+                        ),
+                        const Spacer(flex: 1),
+                      ],
                     ),
                   );
                 }

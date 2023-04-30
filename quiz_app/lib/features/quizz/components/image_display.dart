@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
+import '../../../constants/colors.dart';
+
 class MyPokemonImage extends StatelessWidget {
   final Uint8List imageData;
   final bool show;
@@ -15,7 +17,10 @@ class MyPokemonImage extends StatelessWidget {
       return const SizedBox(
         height: 256,
         width: 256,
-        child: CircularProgressIndicator(),
+        child: Padding(
+          padding: EdgeInsets.all(80.0),
+          child: CircularProgressIndicator(),
+        ),
       );
     }
     switch (show) {
@@ -30,8 +35,7 @@ class MyPokemonImage extends StatelessWidget {
           height: 256,
           width: 256,
           child: ColorFiltered(
-              colorFilter:
-                  const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(MyColors.myBlack, BlendMode.srcIn),
               child: Image.memory(imageData)),
         );
       default:

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../constants/colors.dart';
+
 class MyButton extends StatefulWidget {
   final String? text;
   final IconData? icon;
@@ -25,7 +27,7 @@ class MyButton extends StatefulWidget {
     this.margin = 8,
     this.minWidth = 150,
     this.outlineColor = Colors.transparent,
-    this.backgroundColor = Colors.blue,
+    this.backgroundColor = Colors.white,
     this.textColor = Colors.black,
     required this.onPressed,
     this.disabled = false,

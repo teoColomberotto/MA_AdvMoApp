@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/constants/theme.dart';
 import 'package:quiz_app/routes/app_router.dart';
 
 class MyApp extends StatelessWidget {
@@ -9,10 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        // fontFamily: 'Pokemon',
-        primarySwatch: Colors.blue,
-      ),
+      theme: MyTheme.lightTheme,
       routerConfig: _appRouter.config(),
     );
   }
