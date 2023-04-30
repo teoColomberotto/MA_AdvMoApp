@@ -93,3 +93,14 @@ class QuizTimerTick extends QuizEvent {
 class QuizPause extends QuizEvent {}
 
 class QuizResume extends QuizEvent {}
+
+class QuizNoInternetDetected extends QuizEvent {}
+
+class QuizInternetDetected extends QuizEvent {
+  final ConnectivityState connectivityState;
+
+  const QuizInternetDetected({required this.connectivityState});
+
+  @override
+  List<Object> get props => [connectivityState];
+}

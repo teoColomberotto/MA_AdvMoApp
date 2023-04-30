@@ -25,7 +25,9 @@ class QuizScreen extends StatelessWidget {
     return BlocConsumer<QuizBloc, QuizState>(buildWhen: (previous, current) {
       if (current is QuizPaused ||
           current is QuizResumed ||
-          current is QuizNavigateToHome) {
+          current is QuizNavigateToHome ||
+          current is QuizPausedDueToNoInternetConnection ||
+          current is QuizInternetConnectionRestored) {
         return false;
       } else {
         return true;
@@ -81,6 +83,26 @@ class QuizScreen extends StatelessWidget {
                         child: const Text('Go back to home'))
                   ],
                 ));
+      } else if (state is QuizPausedDueToNoInternetConnection) {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text('No internet connection'),
+                  content: const Text(
+                      'Please check your internet connection and try again.'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          context.router.popUntilRoot();
+                          context.read<QuizBloc>().add(QuizReset());
+                        },
+                        child: const Text('Go back to home'))
+                  ],
+                ));
+      } else if (state is QuizInternetConnectionRestored) {
+        context.router.pop();
+        context.read<QuizBloc>().add(QuizResume());
       }
     });
   }

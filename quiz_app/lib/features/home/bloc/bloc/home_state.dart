@@ -14,3 +14,12 @@ class HomePlayButtonPressed extends HomeState {}
 class HomeLeaderboardButtonPressed extends HomeState {}
 
 class HomeAboutButtonPressed extends HomeState {}
+
+class HomeQuizStartRefused extends HomeState {
+  final String message;
+
+  const HomeQuizStartRefused({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

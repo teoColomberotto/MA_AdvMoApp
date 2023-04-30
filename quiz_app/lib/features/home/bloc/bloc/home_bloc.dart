@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../connectivity/bloc/connectivity_bloc.dart';
 import '../../../quizz/bloc/quiz_bloc.dart';
 
 part 'home_event.dart';
@@ -8,11 +12,24 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final QuizBloc quizBloc;
+  final ConnectivityBloc connectivityBloc;
+  late final StreamSubscription connectivitySubription;
+  late ConnectivityState _connectivityState = ConnectivityUnknown();
 
-  HomeBloc({required this.quizBloc}) : super(HomeInitial()) {
-    on<HomeEvent>((event, emit) {
+  HomeBloc({required this.connectivityBloc, required this.quizBloc})
+      : super(HomeInitial()) {
+    connectivitySubription =
+        connectivityBloc.stream.listen((connectivityState) {
+      if (connectivityState is ConnectivityConnected) {
+        _connectivityState = connectivityState;
+      } else if (connectivityState is ConnectivityDisconnected) {
+        _connectivityState = connectivityState;
+      }
+    });
+
+    on<HomeEvent>((event, emit) async {
       if (event is HomePlayPressed) {
-        mapHomePlayPressedToState(emit);
+        await mapHomePlayPressedToState(emit);
       } else if (event is HomeLeaderboardPressed) {
         mapHomeLeaderboardPressedToState(emit);
       } else if (event is HomeResetState) {
@@ -23,9 +40,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
   }
 
-  void mapHomePlayPressedToState(Emitter<HomeState> emit) {
-    quizBloc.add(QuizStart());
-    emit(HomePlayButtonPressed());
+  Future<void> mapHomePlayPressedToState(Emitter<HomeState> emit) async {
+    await Connectivity().checkConnectivity().then((status) {
+      if (status == ConnectivityResult.none) {
+        if (!emit.isDone) {
+          emit(HomeQuizStartRefused(message: 'No internet connection'));
+        }
+      } else {
+        quizBloc.add(QuizStart());
+        emit(HomePlayButtonPressed());
+      }
+    }).onError((error, stackTrace) {
+      print("error: " + error.toString());
+    }).whenComplete(() {
+      print("completed");
+    });
+
+    // quizBloc.add(QuizStart());
+    // emit(HomePlayButtonPressed());
   }
 
   void mapHomeLeaderboardPressedToState(Emitter<HomeState> emit) {

@@ -10,6 +10,7 @@ import 'package:quiz_app/features/quizz/bloc/timer_bloc.dart';
 import 'package:quiz_app/features/storage/bloc/storage_bloc.dart';
 import 'package:quiz_app/features/storage/models/pokemon_image_model.dart';
 
+import '../../connectivity/bloc/connectivity_bloc.dart';
 import '../../database/models/pokemon_model.dart';
 import '../../database/models/score_model.dart';
 import '../models/question_model.dart';
@@ -23,16 +24,18 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   final TimerBloc timerBloc;
   final DatabaseBloc databaseBloc;
   final StorageBloc storageBloc;
-  // late Question _currentQuestion;
+  final ConnectivityBloc connectivityBloc;
   late final StreamSubscription timerSubscription;
   late final StreamSubscription databaseSubscription;
   late final StreamSubscription strorageSubscription;
+  late final StreamSubscription connectivitySubscription;
 
-  QuizBloc({
-    required this.timerBloc,
-    required this.databaseBloc,
-    required this.storageBloc,
-  }) : super(QuizInitial()) {
+  QuizBloc(
+      {required this.timerBloc,
+      required this.databaseBloc,
+      required this.storageBloc,
+      required this.connectivityBloc})
+      : super(QuizInitial()) {
     _quiz = Quiz();
     timerSubscription = timerBloc.stream.listen((timerState) {
       if (timerState is Ready) {
@@ -57,6 +60,14 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         add(QuizScoreIsValid(score: databaseState.score));
       } else if (databaseState is DatabaseScoreNameAlreadyExists) {
         add(QuizScoreIsNotValid(scoreName: databaseState.name));
+      }
+    });
+    connectivitySubscription =
+        connectivityBloc.stream.listen((connectivityState) {
+      if (connectivityState is ConnectivityConnected) {
+        add(QuizInternetDetected(connectivityState: connectivityState));
+      } else if (connectivityState is ConnectivityDisconnected) {
+        add(QuizNoInternetDetected());
       }
     });
     on<QuizEvent>((event, emit) {
@@ -94,6 +105,10 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         mapQuizScoreIsValidToState(event, emit);
       } else if (event is QuizScoreIsNotValid) {
         mapQuizScoreIsNotValidToState(event, emit);
+      } else if (event is QuizNoInternetDetected) {
+        mapQuizNoInternetDetectedToState(event, emit);
+      } else if (event is QuizInternetDetected) {
+        mapQuizInternetDetectedToState(event, emit);
       }
     });
   }
@@ -234,5 +249,17 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   void mapQuizScoreIsNotValidToState(
       QuizScoreIsNotValid event, Emitter<QuizState> emit) {
     emit(QuizScoreNotValid(scoreName: event.scoreName));
+  }
+
+  void mapQuizNoInternetDetectedToState(
+      QuizNoInternetDetected event, Emitter<QuizState> emit) {
+    add(QuizPause());
+    emit(QuizPausedDueToNoInternetConnection());
+  }
+
+  void mapQuizInternetDetectedToState(
+      QuizInternetDetected event, Emitter<QuizState> emit) {
+    add(QuizResume());
+    emit(QuizInternetConnectionRestored());
   }
 }
