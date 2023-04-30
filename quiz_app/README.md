@@ -14,7 +14,7 @@ The Boilerplate contains the minimal implementation required to create a new lib
 Download or clone this repo by using the link below:
 
 ```
-https://github.com/
+https://github.com/teoColomberotto/MA_AdvMoApp
 ```
 
 **Step 2:**
@@ -139,6 +139,6 @@ Unit test coverage:
 
 ## Wiki
 
-Checkout [wiki](https://github.com/zubairehman/flutter-boilerplate-project/wiki) for more info
+Checkout [wiki](https://github.com/teoColomberotto/MA_AdvMoApp/wiki) for more info
 
 ## Conclusion
