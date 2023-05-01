@@ -5,16 +5,28 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.portrait) {
+      return _buildPortraitLayout(context);
+    } else {
+      return _buildLandscapeLayout(context);
+    }
+  }
+
+  Widget _buildPortraitLayout(BuildContext context) {
     return SizedBox(
-      height: 400,
       child: Column(children: [
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: 300,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/pikachu-logo.png'),
-              fit: BoxFit.fitHeight,
+          child: Align(
+            alignment:
+                Alignment.center, // Center the image within the crop area
+            child: ClipRect(
+              child: Image.asset(
+                'assets/images/pikachu-logo.png', // Replace with your image path
+                fit: BoxFit
+                    .cover, // Scale and crop the image to fit the crop area
+              ),
             ),
           ),
         ),
@@ -31,6 +43,21 @@ class AppLogo extends StatelessWidget {
           ),
         ),
       ]),
+    );
+  }
+
+  Widget _buildLandscapeLayout(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Align(
+        alignment: Alignment.center, // Center the image within the crop area
+        child: ClipRect(
+          child: Image.asset(
+            'assets/images/pikachu-logo.png', // Replace with your image path
+            fit: BoxFit.cover, // Scale and crop the image to fit the crop area
+          ),
+        ),
+      ),
     );
   }
 }
