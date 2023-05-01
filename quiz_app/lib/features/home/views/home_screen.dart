@@ -67,10 +67,6 @@ class HomeScreen extends StatelessWidget {
                 builder: (BuildContext context, BoxConstraints constraints) {
               MyDeviceType myDeviceType =
                   getDeviceTypeFromMediaQuery(MediaQuery.of(context));
-              print("device type: " + myDeviceType.toString());
-              print("device dimensions: " +
-                  MediaQuery.of(context).size.width.toString() +
-                  MediaQuery.of(context).size.height.toString());
               if (myDeviceType == MyDeviceType.tabletPortrait) {
                 return _buildTabletPortraitLayout(context);
               } else if (myDeviceType == MyDeviceType.tabletLandscape) {
