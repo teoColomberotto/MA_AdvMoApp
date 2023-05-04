@@ -1,4 +1,6 @@
 //create a singleton Quiz class that contain a list of Question and a score
+// ignore_for_file: unnecessary_getters_setters
+
 import 'package:quiz_app/features/quizz/models/question_model.dart';
 
 import '../../../constants/enums.dart';

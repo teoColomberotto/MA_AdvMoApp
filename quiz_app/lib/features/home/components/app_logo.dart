@@ -95,11 +95,11 @@ class AppLogo extends StatelessWidget {
   }
 
   Widget _buildDesktopPortraitLayout(BuildContext context) {
-    return Text('Desktop Portrait Layout');
+    return const Text('Desktop Portrait Layout');
   }
 
   Widget _buildDesktopLandscapeLayout(BuildContext context) {
-    return Text('Desktop Landscape Layout');
+    return const Text('Desktop Landscape Layout');
   }
 
   Widget _buildMobilePortraitLayout(BuildContext context) {

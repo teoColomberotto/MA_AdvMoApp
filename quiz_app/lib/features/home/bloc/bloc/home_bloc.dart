@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -14,17 +15,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final QuizBloc quizBloc;
   final ConnectivityBloc connectivityBloc;
   late final StreamSubscription connectivitySubription;
-  late ConnectivityState _connectivityState = ConnectivityUnknown();
 
   HomeBloc({required this.connectivityBloc, required this.quizBloc})
       : super(HomeInitial()) {
     connectivitySubription =
         connectivityBloc.stream.listen((connectivityState) {
       if (connectivityState is ConnectivityConnected) {
-        _connectivityState = connectivityState;
-      } else if (connectivityState is ConnectivityDisconnected) {
-        _connectivityState = connectivityState;
-      }
+      } else if (connectivityState is ConnectivityDisconnected) {}
     });
 
     on<HomeEvent>((event, emit) async {
@@ -44,20 +41,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     await Connectivity().checkConnectivity().then((status) {
       if (status == ConnectivityResult.none) {
         if (!emit.isDone) {
-          emit(HomeQuizStartRefused(message: 'No internet connection'));
+          emit(const HomeQuizStartRefused(message: 'No internet connection'));
         }
       } else {
         quizBloc.add(QuizStart());
         emit(HomePlayButtonPressed());
       }
     }).onError((error, stackTrace) {
-      print("error: " + error.toString());
-    }).whenComplete(() {
-      print("completed");
-    });
-
-    // quizBloc.add(QuizStart());
-    // emit(HomePlayButtonPressed());
+      log("error: $error");
+    }).whenComplete(() {});
   }
 
   void mapHomeLeaderboardPressedToState(Emitter<HomeState> emit) {

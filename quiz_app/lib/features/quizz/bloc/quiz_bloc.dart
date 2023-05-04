@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:quiz_app/constants/enums.dart';
 import 'package:quiz_app/exceptions/questions_lenght_exceeded_exception.dart';
 import 'package:quiz_app/features/database/bloc/database_bloc.dart';
@@ -40,7 +39,6 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     timerSubscription = timerBloc.stream.listen((timerState) {
       if (timerState is Ready) {
       } else if (timerState is Running) {
-        debugPrint('remaining time: ${timerState.duration}');
         // add(QuizTimerTick(duration: timerState.duration));
       } else if (timerState is Paused) {
       } else if (timerState is Finished) {
@@ -207,7 +205,6 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     int scorePoints = _quiz.scorePoints;
     Score score = Score(
         name: event.scoreName, score: scorePoints, timestamp: DateTime.now());
-    debugPrint('score submitted${score.name}');
     _quiz.score = score;
     databaseBloc.add(DatabaseAddScore(score: score));
   }

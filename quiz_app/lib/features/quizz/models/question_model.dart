@@ -1,4 +1,6 @@
 //create a Question model that contain a Pokemon object, a boolean answer and a String question
+// ignore_for_file: unnecessary_getters_setters
+
 import 'dart:typed_data';
 
 import 'package:quiz_app/constants/enums.dart';

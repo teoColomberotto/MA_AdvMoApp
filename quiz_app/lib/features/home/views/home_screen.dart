@@ -372,10 +372,10 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildDesktopPortraitLayout(BuildContext context) {
-    return Text('Desktop portrait Layout');
+    return const Text('Desktop portrait Layout');
   }
 
   Widget _buildDesktopLandscapeLayout(BuildContext context) {
-    return Text('Desktop Landscape Layout');
+    return const Text('Desktop Landscape Layout');
   }
 }
