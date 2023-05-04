@@ -5,6 +5,7 @@ import 'package:quiz_app/features/home/bloc/bloc/home_bloc.dart';
 import 'features/about/bloc/about_bloc.dart';
 import 'features/connectivity/bloc/connectivity_bloc.dart';
 import 'features/leaderboard/bloc/leaderboard_bloc.dart';
+import 'features/lifecycle/bloc/lifecycle_bloc.dart';
 import 'features/quizz/bloc/quiz_bloc.dart';
 import 'features/quizz/bloc/timer_bloc.dart';
 import 'features/quizz/models/ticker_model.dart';
@@ -30,6 +31,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => ConnectivityBloc()),
+        BlocProvider(create: (context) => LifecycleBloc()),
         BlocProvider(create: (context) => StorageBloc(StorageRepositoryImpl())),
         BlocProvider(
           create: (context) => DatabaseBloc(DatabaseRepositoryImpl(),
@@ -43,7 +45,8 @@ void main() async {
                 connectivityBloc: context.read<ConnectivityBloc>(),
                 timerBloc: context.read<TimerBloc>(),
                 databaseBloc: context.read<DatabaseBloc>(),
-                storageBloc: context.read<StorageBloc>())),
+                storageBloc: context.read<StorageBloc>(),
+                lifecycleBloc: context.read<LifecycleBloc>())),
         BlocProvider(
             create: (context) => HomeBloc(
                 connectivityBloc: context.read<ConnectivityBloc>(),
@@ -53,7 +56,7 @@ void main() async {
                 LeaderboardBloc(databaseBloc: context.read<DatabaseBloc>())),
         BlocProvider(create: (context) => AboutBloc()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
   Bloc.observer = AppBlocObserver();

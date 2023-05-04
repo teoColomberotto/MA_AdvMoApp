@@ -22,7 +22,9 @@ class MyQuestionDisplay extends StatelessWidget {
           current is QuizResumed ||
           current is QuizNavigateToHome ||
           current is QuizPausedDueToNoInternetConnection ||
-          current is QuizInternetConnectionRestored) {
+          current is QuizInternetConnectionRestored ||
+          current is QuizPausedDueToPausedApplication ||
+          current is QuizResumedApplication) {
         return false;
       } else {
         return true;

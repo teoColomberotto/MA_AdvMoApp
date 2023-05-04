@@ -3,6 +3,8 @@ enum QuestionStatus { active, inactive }
 
 enum AnswerStatus { unanswered, correct, incorrect }
 
+enum AppLifecycleStateEvent { resumed, inactive, paused }
+
 enum PokemonType {
   bug,
   dark,

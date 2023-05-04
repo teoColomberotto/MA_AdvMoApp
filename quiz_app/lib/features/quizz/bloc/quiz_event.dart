@@ -106,3 +106,7 @@ class QuizInternetDetected extends QuizEvent {
   @override
   List<Object> get props => [connectivityState];
 }
+
+class QuizPausedApplicationDetected extends QuizEvent {}
+
+class QuizResumedApplicationDetected extends QuizEvent {}
