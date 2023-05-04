@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:quiz_app/constants/constants.dart';
 import 'package:quiz_app/constants/enums.dart';
 import 'package:quiz_app/exceptions/questions_lenght_exceeded_exception.dart';
 import 'package:quiz_app/features/database/bloc/database_bloc.dart';
@@ -43,7 +44,9 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       } else if (timerState is Paused) {
       } else if (timerState is Finished) {
         int currentQuestionIndex = _quiz.currentQuestionIndex;
-        add(QuizQuestionAnswered(currentQuestionIndex: currentQuestionIndex));
+        add(QuizQuestionAnswered(
+            currentQuestionIndex: currentQuestionIndex,
+            duration: timerDuration));
       }
     });
     strorageSubscription = storageBloc.stream.listen((storageState) {
@@ -134,6 +137,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     timerBloc.add(Reset());
     if (event.answerIndex != null) {
       currentQuestion.answerChoosedByUser = event.answerIndex;
+      currentQuestion.timeRequiredToAnswer = event.duration;
       if (currentQuestion.pokemon.answers[event.answerIndex.toString()][1] ==
           true) {
         currentQuestion.answer = AnswerStatus.correct;
@@ -146,6 +150,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     } else {
       currentQuestion.answer = AnswerStatus.incorrect;
       currentQuestion.answerChoosedByUser = null;
+      currentQuestion.timeRequiredToAnswer = 0;
 
       emit(QuizQuestionValidated(
           question: currentQuestion,

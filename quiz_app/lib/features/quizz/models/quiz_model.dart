@@ -45,7 +45,7 @@ class Quiz {
     int score = 0;
     for (final question in _questions) {
       if (question.answer == AnswerStatus.correct) {
-        score += 50;
+        score += 10 * question.timeRequiredToAnswer;
       }
     }
     _scorePoints = score;

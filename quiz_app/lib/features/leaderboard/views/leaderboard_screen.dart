@@ -247,7 +247,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 child: Row(
                   children: [
                     const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 30),
                       child: Expanded(child: MyLeaderboardTitle()),
                     ),
                     const Spacer(),
