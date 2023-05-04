@@ -132,6 +132,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   }
 
   void mapQuizStartedToState(QuizStart event, Emitter<QuizState> emit) {
+    _quizIsFinished = false;
     emit(const QuizLoading(message: 'Loading quiz...'));
     databaseBloc.add(const DatabaseGetPokemonsList(limit: 10));
   }
