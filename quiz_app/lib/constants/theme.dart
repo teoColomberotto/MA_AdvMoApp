@@ -37,6 +37,15 @@ class MyTheme {
       ),
     ),
 
+    //Text Button
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all(MyColors.myBlack),
+        overlayColor:
+            MaterialStateProperty.all(MyColors.myBlack.withOpacity(0.1)),
+      ),
+    ),
+
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: MyColors.myBlack,
     ),
@@ -159,10 +168,30 @@ class MyTheme {
     //Card
     cardTheme: CardTheme(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      color: MyColors.mySurfaceColor,
+      color: MyColors.myTertiaryColor,
       elevation: 10,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+
+    //AlertDialog
+    dialogTheme: DialogTheme(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 10,
+      backgroundColor: MyColors.myWhite,
+      surfaceTintColor: MyColors.myBlack,
+      titleTextStyle: TextStyle(
+        color: MyColors.myBlack,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      contentTextStyle: TextStyle(
+        color: MyColors.myBlack,
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
       ),
     ),
 

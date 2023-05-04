@@ -71,16 +71,21 @@ class QuizScreen extends StatelessWidget {
                   actions: [
                     TextButton(
                         onPressed: () {
+                          context.router.popUntilRoot();
+                          context.read<QuizBloc>().add(QuizReset());
+                        },
+                        child: Text(
+                          'Go back to home',
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              decorationColor: MyColors.myBlack),
+                        )),
+                    TextButton(
+                        onPressed: () {
                           context.router.pop();
                           context.read<QuizBloc>().add(QuizResume());
                         },
                         child: const Text('Cancel')),
-                    TextButton(
-                        onPressed: () {
-                          context.router.popUntilRoot();
-                          context.read<QuizBloc>().add(QuizReset());
-                        },
-                        child: const Text('Go back to home'))
                   ],
                 ));
       } else if (state is QuizPausedDueToNoInternetConnection) {

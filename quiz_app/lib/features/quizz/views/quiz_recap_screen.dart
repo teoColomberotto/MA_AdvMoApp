@@ -6,8 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:quiz_app/common_widgets/my_button.dart';
 import 'package:quiz_app/constants/colors.dart';
+import 'package:quiz_app/features/quizz/components/quiz_recap_logo.dart';
 import 'package:quiz_app/features/quizz/components/score_form.dart';
 
+import '../../../constants/breakpoints.dart';
+import '../../../utils/utils.dart';
 import '../bloc/quiz_bloc.dart';
 import '../components/recap_info.dart';
 
@@ -49,8 +52,50 @@ class _QuizRecapScreenState extends State<QuizRecapScreen> {
     super.dispose();
   }
 
+  Future<void> _showBackToHomeConfirmationDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, //user must tap button to close dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text(
+                    'Your score will not be saved and you will lose your progress.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Back to home',
+                style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    decorationColor: MyColors.myBlack),
+              ),
+              onPressed: () {
+                context.read<QuizBloc>().add(QuizReset());
+                context.router.popUntilRoot();
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    MyDeviceType myDeviceType =
+        getDeviceTypeFromMediaQuery(MediaQuery.of(context));
     return BlocListener<QuizBloc, QuizState>(
       listener: (context, state) {
         if (state is QuizScoreNotValid) {
@@ -63,108 +108,142 @@ class _QuizRecapScreenState extends State<QuizRecapScreen> {
         }
       },
       child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+            backgroundColor: MyColors.myBackgroundColor,
+            elevation: 0,
+            title: Image.asset(
+              'assets/images/pokemonBrand-logo.png',
+              fit: BoxFit.contain,
+              height: 32,
+            ),
+            leading: (myDeviceType == MyDeviceType.tabletLandscape ||
+                    myDeviceType == MyDeviceType.tabletPortrait)
+                ? null
+                : IconButton(
+                    splashRadius: 25.0,
+                    splashColor: Colors.orangeAccent,
+                    icon: const Icon(Icons.chevron_left, size: 30),
+                    onPressed: () {
+                      _showBackToHomeConfirmationDialog(context);
+                    },
+                  ),
+          ),
           body: BlocBuilder<QuizBloc, QuizState>(
-        buildWhen: (previous, current) {
-          if (current is QuizScoreNotValid) {
-            return false;
-          } else if (previous is QuizScoreNotValid && current is QuizFinished) {
-            return false;
-          } else {
-            return true;
-          }
-        },
-        builder: (context, state) {
-          if (state is QuizFinished) {
-            return Container(
-              decoration: BoxDecoration(
-                  gradient: MyColorsGradients.myBackgroundRedGradient),
-              child: SafeArea(
-                child: Center(
-                    child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: MediaQuery.of(context).size.width,
-                        minHeight: MediaQuery.of(context).size.height,
-                      ),
-                      child: IntrinsicHeight(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            const Spacer(flex: 1),
-                            Text('Congratulations !',
+            buildWhen: (previous, current) {
+              if (current is QuizScoreNotValid) {
+                return false;
+              } else if (previous is QuizScoreNotValid &&
+                  current is QuizFinished) {
+                return false;
+              } else {
+                return true;
+              }
+            },
+            builder: (context, state) {
+              if (state is QuizFinished) {
+                return Container(
+                  decoration: BoxDecoration(
+                      gradient: MyColorsGradients.myBackgroundRedGradient),
+                  child: SafeArea(
+                    child: Center(
+                        child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: MediaQuery.of(context).size.width,
+                            maxHeight: MediaQuery.of(context).size.height * 0.9,
+                          ),
+                          child: Column(
+                            children: [
+                              const Spacer(flex: 1),
+                              Text('Congratulations !',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineLarge
+                                      ?.copyWith(
+                                        color: MyColors.mySecondaryColor,
+                                      )),
+                              Text(
+                                'You have finished the quiz !',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headlineLarge
+                                    .bodyLarge
                                     ?.copyWith(
                                       color: MyColors.mySecondaryColor,
-                                    )),
-                            const Spacer(flex: 1),
-                            QuizRecapInfo(quiz: state.quiz),
-                            const Spacer(flex: 1),
-                            QuizScoreForm(quiz: state.quiz),
-                            const Spacer(flex: 3),
-                          ],
+                                    ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const Spacer(flex: 2),
+                              QuizRecapInfo(quiz: state.quiz),
+                              const Spacer(flex: 1),
+                              QuizScoreForm(quiz: state.quiz),
+                              const Spacer(flex: 2),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+                    )),
                   ),
-                )),
-              ),
-            );
-          } else if (state is QuizScoreValidated) {
-            return Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.red, Colors.deepOrange],
-                ),
-              ),
-              child: SafeArea(
-                child: Center(
-                    child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const Spacer(flex: 2),
-                      Text('Thank you ${state.score.name} !',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineLarge
-                              ?.copyWith(
-                                color: MyColors.mySecondaryColor,
-                              )),
-                      Text('Your score has been saved !',
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                );
+              } else if (state is QuizScoreValidated) {
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: MyColorsGradients.myBackgroundRedGradient,
+                  ),
+                  child: SafeArea(
+                    child: Center(
+                        child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          const Spacer(flex: 1),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: QuizRecapLogo(),
+                          ),
+                          const Spacer(flex: 1),
+                          Text('Thank you ${state.score.name} !',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineLarge
+                                  ?.copyWith(
                                     color: MyColors.mySecondaryColor,
                                   )),
-                      const Spacer(flex: 1),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 100),
-                        child: MyButton(
-                            text: 'Back to home',
-                            onPressed: () {
-                              context.read<QuizBloc>().add(QuizReset());
-                              context.router.popUntilRoot();
-                            }),
+                          Text('Your score has been saved !',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: MyColors.mySecondaryColor,
+                                  )),
+                          const Spacer(flex: 1),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 100),
+                            child: MyButton(
+                                text: 'Back to home',
+                                onPressed: () {
+                                  context.read<QuizBloc>().add(QuizReset());
+                                  context.router.popUntilRoot();
+                                }),
+                          ),
+                          const Spacer(flex: 1),
+                        ],
                       ),
-                      const Spacer(flex: 3),
-                    ],
+                    )),
                   ),
-                )),
-              ),
-            );
-          } else {
-            return const Center(
-                child: Text('Something went wrong, please try again'));
-          }
-        },
-      )),
+                );
+              } else {
+                return const Center(
+                    child: Text('Something went wrong, please try again'));
+              }
+            },
+          )),
     );
   }
 }

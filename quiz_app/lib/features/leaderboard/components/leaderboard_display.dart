@@ -12,6 +12,7 @@ class MyLeaderboardDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       itemCount: leaderboard.leaderboard.length,
       itemBuilder: (BuildContext context, int index) {
         Score score = leaderboard.leaderboard[index];

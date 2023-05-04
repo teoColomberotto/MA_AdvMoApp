@@ -63,13 +63,14 @@ class _QuizScoreFormState extends State<QuizScoreForm> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
               Row(
                 children: [
                   Expanded(
                       child: MyButton(
-                    backgroundColor: MyColors.myBlack,
-                    textColor: MyColors.myWhite,
+                    backgroundColor: Colors.transparent,
+                    outlineColor: MyColors.myTertiaryColor,
+                    textColor: MyColors.myTertiaryColor,
                     text: 'Skip',
                     onPressed: () => context.read<QuizBloc>().add(QuizReset()),
                   )),
