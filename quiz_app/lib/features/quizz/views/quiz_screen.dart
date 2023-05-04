@@ -27,7 +27,9 @@ class QuizScreen extends StatelessWidget {
           current is QuizResumed ||
           current is QuizNavigateToHome ||
           current is QuizPausedDueToNoInternetConnection ||
-          current is QuizInternetConnectionRestored) {
+          current is QuizInternetConnectionRestored ||
+          current is QuizPausedDueToPausedApplication ||
+          current is QuizResumedApplication) {
         return false;
       } else {
         return true;
@@ -108,6 +110,30 @@ class QuizScreen extends StatelessWidget {
       } else if (state is QuizInternetConnectionRestored) {
         context.router.pop();
         context.read<QuizBloc>().add(QuizResume());
+      } else if (state is QuizPausedDueToPausedApplication) {
+      } else if (state is QuizResumedApplication) {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: const Text('App Paused'),
+                  content: const Text(
+                      'Wlecome back. Feel free to resume you quiz or go back to home.'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          context.router.pop();
+                          context.read<QuizBloc>().add(QuizResume());
+                        },
+                        child: const Text('Resume quiz')),
+                    TextButton(
+                        onPressed: () {
+                          context.router.popUntilRoot();
+                          context.read<QuizBloc>().add(QuizReset());
+                        },
+                        child: const Text('Go back to home'))
+                  ],
+                ));
       }
     });
   }

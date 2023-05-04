@@ -13,6 +13,7 @@ import 'package:quiz_app/features/storage/models/pokemon_image_model.dart';
 import '../../connectivity/bloc/connectivity_bloc.dart';
 import '../../database/models/pokemon_model.dart';
 import '../../database/models/score_model.dart';
+import '../../lifecycle/bloc/lifecycle_bloc.dart';
 import '../models/question_model.dart';
 import '../models/quiz_model.dart';
 
@@ -25,16 +26,19 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   final DatabaseBloc databaseBloc;
   final StorageBloc storageBloc;
   final ConnectivityBloc connectivityBloc;
+  final LifecycleBloc lifecycleBloc;
   late final StreamSubscription timerSubscription;
   late final StreamSubscription databaseSubscription;
   late final StreamSubscription strorageSubscription;
   late final StreamSubscription connectivitySubscription;
+  late final StreamSubscription lifecycleSubscription;
 
   QuizBloc(
       {required this.timerBloc,
       required this.databaseBloc,
       required this.storageBloc,
-      required this.connectivityBloc})
+      required this.connectivityBloc,
+      required this.lifecycleBloc})
       : super(QuizInitial()) {
     _quiz = Quiz();
     timerSubscription = timerBloc.stream.listen((timerState) {
@@ -69,6 +73,13 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         add(QuizInternetDetected(connectivityState: connectivityState));
       } else if (connectivityState is ConnectivityDisconnected) {
         add(QuizNoInternetDetected());
+      }
+    });
+    lifecycleSubscription = lifecycleBloc.stream.listen((lifecycleState) {
+      if (lifecycleState is ResumedState) {
+        add(QuizResumedApplicationDetected());
+      } else if (lifecycleState is PausedState) {
+        add(QuizPausedApplicationDetected());
       }
     });
     on<QuizEvent>((event, emit) {
@@ -110,6 +121,10 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         mapQuizNoInternetDetectedToState(event, emit);
       } else if (event is QuizInternetDetected) {
         mapQuizInternetDetectedToState(event, emit);
+      } else if (event is QuizPausedApplicationDetected) {
+        mapQuizPausedApplicationDetectedToState(event, emit);
+      } else if (event is QuizResumedApplicationDetected) {
+        mapQuizResumedApplicationDetectedToState(event, emit);
       }
     });
   }
@@ -263,5 +278,16 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       QuizInternetDetected event, Emitter<QuizState> emit) {
     add(QuizResume());
     emit(QuizInternetConnectionRestored());
+  }
+
+  void mapQuizPausedApplicationDetectedToState(
+      QuizPausedApplicationDetected event, Emitter<QuizState> emit) {
+    add(QuizPause());
+    emit(QuizPausedDueToPausedApplication());
+  }
+
+  void mapQuizResumedApplicationDetectedToState(
+      QuizResumedApplicationDetected event, Emitter<QuizState> emit) {
+    emit(QuizResumedApplication());
   }
 }
