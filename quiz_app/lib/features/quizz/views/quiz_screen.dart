@@ -17,125 +17,143 @@ import '../models/quiz_model.dart';
 
 @RoutePage()
 class QuizScreen extends StatelessWidget {
-  const QuizScreen({super.key});
+  QuizScreen({super.key});
   static Quiz _quiz = Quiz();
+  bool _isDialogShowing = false;
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<QuizBloc, QuizState>(buildWhen: (previous, current) {
-      if (current is QuizPaused ||
-          current is QuizResumed ||
-          current is QuizNavigateToHome ||
-          current is QuizPausedDueToNoInternetConnection ||
-          current is QuizInternetConnectionRestored ||
-          current is QuizPausedDueToPausedApplication ||
-          current is QuizResumedApplication) {
-        return false;
-      } else {
-        return true;
-      }
-    }, builder: (context, state) {
-      if (state is QuizLoading) {
-        return _mapLoadingStateToUi(context, state);
-      } else if (state is QuizError) {
-        return _mapErrorStateToUi(context, state);
-      } else if (state is QuizFinished) {
-        return _mapFinishedStateToUi(context, state);
-      } else if (state is QuizQuestionShown) {
-        return _mapQuestionShowStateToUi(context, state);
-      } else if (state is QuizQuestionValidated) {
-        return _mapQuestionValidatedStateToUi(context, state);
-      } else if (state is QuizScoreDisplayed) {
-        return _mapScoreDisplayedStateToUi(context);
-      } else if (state is QuizPokemonImageDisplayed) {
-        return _mapPokemonImageDisplayedStateToUi(context);
-      } else if (state is QuizFinished) {
-        return _mapFinishedStateToUi(context, state);
-      } else {
-        return const Center(
-            child: Text('Something went wrong, please try again'));
-      }
-    }, listener: (context, state) {
-      if (state is QuizLoaded) {
-        _quiz = state.quiz;
-      } else if (state is QuizTimerRunning) {
-        debugPrint('Quiz timer running!${state.duration}');
-      } else if (state is QuizFinished) {
-        context.router.pushNamed('/quiz/recap');
-      } else if (state is QuizNavigateToHome) {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('Are you sure?'),
-                  content: const Text(
-                      'If you go back to home, the quiz will finish and your current progress will be lost.'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          context.router.popUntilRoot();
-                          context.read<QuizBloc>().add(QuizReset());
-                        },
-                        child: Text(
-                          'Go back to home',
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              decorationColor: MyColors.myBlack),
-                        )),
-                    TextButton(
-                        onPressed: () {
-                          context.router.pop();
-                          context.read<QuizBloc>().add(QuizResume());
-                        },
-                        child: const Text('Cancel')),
-                  ],
-                ));
-      } else if (state is QuizPausedDueToNoInternetConnection) {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('No internet connection'),
-                  content: const Text(
-                      'Please check your internet connection and try again.'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          context.router.popUntilRoot();
-                          context.read<QuizBloc>().add(QuizReset());
-                        },
-                        child: const Text('Go back to home'))
-                  ],
-                ));
-      } else if (state is QuizInternetConnectionRestored) {
-        context.router.pop();
-        context.read<QuizBloc>().add(QuizResume());
-      } else if (state is QuizPausedDueToPausedApplication) {
-      } else if (state is QuizResumedApplication) {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('App Paused'),
-                  content: const Text(
-                      'Wlecome back. Feel free to resume you quiz or go back to home.'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          context.router.pop();
-                          context.read<QuizBloc>().add(QuizResume());
-                        },
-                        child: const Text('Resume quiz')),
-                    TextButton(
-                        onPressed: () {
-                          context.router.popUntilRoot();
-                          context.read<QuizBloc>().add(QuizReset());
-                        },
-                        child: const Text('Go back to home'))
-                  ],
-                ));
-      }
-    });
+    return BlocConsumer<QuizBloc, QuizState>(
+      buildWhen: (previous, current) {
+        if (current is QuizPaused ||
+            current is QuizResumed ||
+            current is QuizNavigateToHome ||
+            current is QuizPausedDueToNoInternetConnection ||
+            current is QuizInternetConnectionRestored ||
+            current is QuizPausedDueToPausedApplication ||
+            current is QuizResumedApplication) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+      builder: (context, state) {
+        if (state is QuizLoading) {
+          return _mapLoadingStateToUi(context, state);
+        } else if (state is QuizError) {
+          return _mapErrorStateToUi(context, state);
+        } else if (state is QuizFinished) {
+          return _mapFinishedStateToUi(context, state);
+        } else if (state is QuizQuestionShown) {
+          return _mapQuestionShowStateToUi(context, state);
+        } else if (state is QuizQuestionValidated) {
+          return _mapQuestionValidatedStateToUi(context, state);
+        } else if (state is QuizScoreDisplayed) {
+          return _mapScoreDisplayedStateToUi(context);
+        } else if (state is QuizPokemonImageDisplayed) {
+          return _mapPokemonImageDisplayedStateToUi(context);
+        } else if (state is QuizFinished) {
+          return _mapFinishedStateToUi(context, state);
+        } else {
+          return const Center(
+              child: Text('Something went wrong, please try again'));
+        }
+      },
+      listener: (context, state) {
+        if (state is QuizLoaded) {
+          _quiz = state.quiz;
+        } else if (state is QuizTimerRunning) {
+          debugPrint('Quiz timer running!${state.duration}');
+        } else if (state is QuizFinished) {
+          context.router.pushNamed('/quiz/recap');
+        } else if (state is QuizNavigateToHome) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('Are you sure?'),
+                    content: const Text(
+                        'If you go back to home, the quiz will finish and your current progress will be lost.'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            context.router.popUntilRoot();
+                            context.read<QuizBloc>().add(QuizReset());
+                          },
+                          child: Text(
+                            'Go back to home',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationColor: MyColors.myBlack),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            context.router.pop();
+                            context.read<QuizBloc>().add(QuizResume());
+                          },
+                          child: const Text('Cancel')),
+                    ],
+                  ));
+        } else if (state is QuizPausedDueToNoInternetConnection) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('No internet connection'),
+                    content: const Text(
+                        'Please check your internet connection and try again.'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            context.router.popUntilRoot();
+                            context.read<QuizBloc>().add(QuizReset());
+                          },
+                          child: const Text('Go back to home'))
+                    ],
+                  ));
+        } else if (state is QuizInternetConnectionRestored) {
+          context.router.pop();
+          context.read<QuizBloc>().add(QuizResume());
+        } else if (state is QuizPausedDueToPausedApplication) {
+          if (_isDialogShowing) {
+            return;
+          }
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('App Paused'),
+                    content: const Text(
+                        'Wlecome back. Feel free to resume you quiz or go back to home.'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            context.router.pop();
+                            context.read<QuizBloc>().add(QuizResume());
+                            _isDialogShowing = false;
+                          },
+                          child: const Text('Resume quiz')),
+                      TextButton(
+                          onPressed: () {
+                            context.router.popUntilRoot();
+                            context.read<QuizBloc>().add(QuizReset());
+                            _isDialogShowing = false;
+                          },
+                          child: const Text('Go back to home'))
+                    ],
+                  ));
+          _isDialogShowing = true;
+        } else if (state is QuizResumedApplication) {}
+      },
+      listenWhen: (previous, current) {
+        if (current is QuizPausedDueToPausedApplication &&
+            previous is QuizFinished) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+    );
   }
 
   Widget _mapLoadingStateToUi(BuildContext context, QuizLoading state) {

@@ -171,6 +171,14 @@ class _QuizRecapScreenState extends State<QuizRecapScreen> {
     MyDeviceType myDeviceType =
         getDeviceTypeFromMediaQuery(MediaQuery.of(context));
     return BlocListener<QuizBloc, QuizState>(
+        listenWhen: (previous, current) {
+          if (current is QuizPausedDueToPausedApplication ||
+              current is QuizResumedApplicationDetected) {
+            return false;
+          } else {
+            return true;
+          }
+        },
         listener: (context, state) {
           if (state is QuizScoreNotValid) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -223,6 +231,11 @@ class _QuizRecapScreenState extends State<QuizRecapScreen> {
         if (current is QuizScoreNotValid) {
           return false;
         } else if (previous is QuizScoreNotValid && current is QuizFinished) {
+          return false;
+        } else if (current is QuizPausedDueToPausedApplication ||
+            current is QuizResumedApplication ||
+            current is QuizPaused ||
+            current is QuizResumed) {
           return false;
         } else {
           return true;

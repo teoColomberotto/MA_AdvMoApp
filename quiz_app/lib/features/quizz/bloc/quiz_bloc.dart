@@ -33,6 +33,8 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   late final StreamSubscription connectivitySubscription;
   late final StreamSubscription lifecycleSubscription;
 
+  bool _quizIsFinished = false;
+
   QuizBloc(
       {required this.timerBloc,
       required this.databaseBloc,
@@ -213,6 +215,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void mapQuizFinishToState(QuizFinish event, Emitter<QuizState> emit) {
     _quiz.computeScore();
+    _quizIsFinished = true;
     emit(QuizFinished(quiz: _quiz));
   }
 
@@ -245,12 +248,12 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void mapQuizPauseToState(QuizPause event, Emitter<QuizState> emit) {
     timerBloc.add(Pause());
-    emit(QuizPaused());
+    // emit(QuizPaused());
   }
 
   void mapQuizResumeToState(QuizResume event, Emitter<QuizState> emit) {
     timerBloc.add(Resume());
-    emit(QuizResumed());
+    // emit(QuizResumed());
   }
 
   void mapQuizBackToHomeToState(QuizBackToHome event, Emitter<QuizState> emit) {
@@ -282,12 +285,18 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void mapQuizPausedApplicationDetectedToState(
       QuizPausedApplicationDetected event, Emitter<QuizState> emit) {
+    if (_quizIsFinished == true) {
+      return;
+    }
     add(QuizPause());
     emit(QuizPausedDueToPausedApplication());
   }
 
   void mapQuizResumedApplicationDetectedToState(
       QuizResumedApplicationDetected event, Emitter<QuizState> emit) {
+    if (_quizIsFinished == true) {
+      return;
+    }
     emit(QuizResumedApplication());
   }
 }

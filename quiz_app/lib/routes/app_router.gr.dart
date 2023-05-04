@@ -29,7 +29,7 @@ abstract class _$AppRouter extends RootStackRouter {
     QuizRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const QuizScreen(),
+        child: QuizScreen(),
       );
     },
     QuizRecapRoute.name: (routeData) {
