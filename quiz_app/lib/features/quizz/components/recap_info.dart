@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/colors.dart';
+import '../../../constants/breakpoints.dart';
+import '../../../utils/utils.dart';
 import '../models/quiz_model.dart';
 
 class QuizRecapInfo extends StatelessWidget {
@@ -9,10 +10,17 @@ class QuizRecapInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MyDeviceType myDeviceType =
+        getDeviceTypeFromMediaQuery(MediaQuery.of(context));
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Expanded(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 250, minWidth: 150),
+          constraints: BoxConstraints(
+              minHeight: (myDeviceType == MyDeviceType.mobilePortrait ||
+                      myDeviceType == MyDeviceType.tabletPortrait)
+                  ? 250
+                  : 150,
+              minWidth: 150),
           child: Card(
             margin: const EdgeInsets.only(right: 10.0),
             child: Padding(
@@ -59,7 +67,12 @@ class QuizRecapInfo extends StatelessWidget {
       ),
       Expanded(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 250, minWidth: 150),
+          constraints: BoxConstraints(
+              minHeight: (myDeviceType == MyDeviceType.mobilePortrait ||
+                      myDeviceType == MyDeviceType.tabletPortrait)
+                  ? 250
+                  : 150,
+              minWidth: 150),
           child: Card(
               margin: const EdgeInsets.only(left: 10.0),
               child: Padding(

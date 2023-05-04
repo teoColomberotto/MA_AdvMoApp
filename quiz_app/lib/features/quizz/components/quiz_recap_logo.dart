@@ -79,17 +79,6 @@ class QuizRecapLogo extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width / 2,
-          height: 300,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                scale: 1,
-                opacity: 0.2,
-                image: AssetImage('assets/images/pikachu-boxShadow.png'),
-                fit: BoxFit.fitHeight),
-          ),
-        ),
       ]),
     );
   }
