@@ -77,7 +77,7 @@ class _QuizRecapScreenState extends State<QuizRecapScreen> {
                         )),
                 const Spacer(),
                 SizedBox(
-                    width: (availableWidth / 2) - 50,
+                    width: (availableWidth / 2) - 80,
                     child: QuizRecapInfo(quiz: state.quiz)),
                 const Spacer(),
               ],
