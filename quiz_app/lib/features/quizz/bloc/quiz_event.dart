@@ -19,16 +19,18 @@ class QuizCreate extends QuizEvent {
 }
 
 class QuizQuestionAnswered extends QuizEvent {
+  final int duration;
   final int currentQuestionIndex;
   final int? answerIndex;
 
   const QuizQuestionAnswered({
+    required this.duration,
     required this.currentQuestionIndex,
     this.answerIndex,
   });
 
   @override
-  List<Object> get props => [currentQuestionIndex];
+  List<Object> get props => [currentQuestionIndex, duration];
 }
 
 class QuizIncrementCurrentQuestion extends QuizEvent {}
@@ -104,3 +106,7 @@ class QuizInternetDetected extends QuizEvent {
   @override
   List<Object> get props => [connectivityState];
 }
+
+class QuizPausedApplicationDetected extends QuizEvent {}
+
+class QuizResumedApplicationDetected extends QuizEvent {}

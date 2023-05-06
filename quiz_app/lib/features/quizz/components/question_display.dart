@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_app/common_widgets/my_button.dart';
+import 'package:quiz_app/constants/constants.dart';
 import 'package:quiz_app/constants/enums.dart';
 
 import '../../../constants/colors.dart';
 import '../bloc/quiz_bloc.dart';
+import '../bloc/timer_bloc.dart';
 import '../models/question_model.dart';
 
 class MyQuestionDisplay extends StatelessWidget {
@@ -20,7 +22,9 @@ class MyQuestionDisplay extends StatelessWidget {
           current is QuizResumed ||
           current is QuizNavigateToHome ||
           current is QuizPausedDueToNoInternetConnection ||
-          current is QuizInternetConnectionRestored) {
+          current is QuizInternetConnectionRestored ||
+          current is QuizPausedDueToPausedApplication ||
+          current is QuizResumedApplication) {
         return false;
       } else {
         return true;
@@ -45,33 +49,40 @@ class MyQuestionDisplay extends StatelessWidget {
   }
 
   Widget _createInitialButtonsList(BuildContext context, quizState) {
-    return Expanded(
-      child: GridView.count(
-        crossAxisCount: 2,
-        crossAxisSpacing: 0.0,
-        mainAxisSpacing: 0.0,
-        shrinkWrap: true,
-        padding: EdgeInsets.zero,
-        childAspectRatio: 2.0,
-        children: List.generate((answersCount), (index) {
-          String key = question.pokemon.answers.keys.elementAt(index);
-          final answer =
-              answersCount > index ? question.pokemon.answers[key] : null;
-          return Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-            child: MyButton(
-              text: answer[0].toString().toUpperCase(),
-              backgroundColor: MyColors.myWhite,
-              textColor: MyColors.myOnTertiaryColor,
-              onPressed: () => context.read<QuizBloc>().add(
-                  QuizQuestionAnswered(
-                      currentQuestionIndex: quizState.currentQuestionIndex,
-                      answerIndex: int.parse(key))),
-            ),
-          );
-        }),
-      ),
+    return BlocBuilder<TimerBloc, TimerState>(
+      builder: (context, timerState) {
+        return Expanded(
+          child: GridView.count(
+            crossAxisCount: 2,
+            crossAxisSpacing: 0.0,
+            mainAxisSpacing: 0.0,
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            childAspectRatio: 2.0,
+            children: List.generate((answersCount), (index) {
+              String key = question.pokemon.answers.keys.elementAt(index);
+              final answer =
+                  answersCount > index ? question.pokemon.answers[key] : null;
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 16.0, horizontal: 16.0),
+                child: MyButton(
+                  text: answer[0].toString().toUpperCase(),
+                  backgroundColor: MyColors.myWhite,
+                  textColor: MyColors.myOnTertiaryColor,
+                  onPressed: () => context.read<QuizBloc>().add(
+                      QuizQuestionAnswered(
+                          duration: (timerState is Running)
+                              ? timerState.duration
+                              : timerDuration,
+                          currentQuestionIndex: quizState.currentQuestionIndex,
+                          answerIndex: int.parse(key))),
+                ),
+              );
+            }),
+          ),
+        );
+      },
     );
   }
 

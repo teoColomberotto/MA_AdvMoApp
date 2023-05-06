@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:quiz_app/constants/constants.dart';
 import 'package:quiz_app/constants/enums.dart';
 import 'package:quiz_app/exceptions/questions_lenght_exceeded_exception.dart';
 import 'package:quiz_app/features/database/bloc/database_bloc.dart';
@@ -13,6 +13,7 @@ import 'package:quiz_app/features/storage/models/pokemon_image_model.dart';
 import '../../connectivity/bloc/connectivity_bloc.dart';
 import '../../database/models/pokemon_model.dart';
 import '../../database/models/score_model.dart';
+import '../../lifecycle/bloc/lifecycle_bloc.dart';
 import '../models/question_model.dart';
 import '../models/quiz_model.dart';
 
@@ -25,27 +26,33 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   final DatabaseBloc databaseBloc;
   final StorageBloc storageBloc;
   final ConnectivityBloc connectivityBloc;
+  final LifecycleBloc lifecycleBloc;
   late final StreamSubscription timerSubscription;
   late final StreamSubscription databaseSubscription;
   late final StreamSubscription strorageSubscription;
   late final StreamSubscription connectivitySubscription;
+  late final StreamSubscription lifecycleSubscription;
+
+  bool _quizIsFinished = false;
 
   QuizBloc(
       {required this.timerBloc,
       required this.databaseBloc,
       required this.storageBloc,
-      required this.connectivityBloc})
+      required this.connectivityBloc,
+      required this.lifecycleBloc})
       : super(QuizInitial()) {
     _quiz = Quiz();
     timerSubscription = timerBloc.stream.listen((timerState) {
       if (timerState is Ready) {
       } else if (timerState is Running) {
-        debugPrint('remaining time: ${timerState.duration}');
         // add(QuizTimerTick(duration: timerState.duration));
       } else if (timerState is Paused) {
       } else if (timerState is Finished) {
         int currentQuestionIndex = _quiz.currentQuestionIndex;
-        add(QuizQuestionAnswered(currentQuestionIndex: currentQuestionIndex));
+        add(QuizQuestionAnswered(
+            currentQuestionIndex: currentQuestionIndex,
+            duration: timerDuration));
       }
     });
     strorageSubscription = storageBloc.stream.listen((storageState) {
@@ -68,6 +75,13 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         add(QuizInternetDetected(connectivityState: connectivityState));
       } else if (connectivityState is ConnectivityDisconnected) {
         add(QuizNoInternetDetected());
+      }
+    });
+    lifecycleSubscription = lifecycleBloc.stream.listen((lifecycleState) {
+      if (lifecycleState is ResumedState) {
+        add(QuizResumedApplicationDetected());
+      } else if (lifecycleState is PausedState) {
+        add(QuizPausedApplicationDetected());
       }
     });
     on<QuizEvent>((event, emit) {
@@ -109,11 +123,16 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         mapQuizNoInternetDetectedToState(event, emit);
       } else if (event is QuizInternetDetected) {
         mapQuizInternetDetectedToState(event, emit);
+      } else if (event is QuizPausedApplicationDetected) {
+        mapQuizPausedApplicationDetectedToState(event, emit);
+      } else if (event is QuizResumedApplicationDetected) {
+        mapQuizResumedApplicationDetectedToState(event, emit);
       }
     });
   }
 
   void mapQuizStartedToState(QuizStart event, Emitter<QuizState> emit) {
+    _quizIsFinished = false;
     emit(const QuizLoading(message: 'Loading quiz...'));
     databaseBloc.add(const DatabaseGetPokemonsList(limit: 10));
   }
@@ -136,6 +155,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     timerBloc.add(Reset());
     if (event.answerIndex != null) {
       currentQuestion.answerChoosedByUser = event.answerIndex;
+      currentQuestion.timeRequiredToAnswer = event.duration;
       if (currentQuestion.pokemon.answers[event.answerIndex.toString()][1] ==
           true) {
         currentQuestion.answer = AnswerStatus.correct;
@@ -148,6 +168,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     } else {
       currentQuestion.answer = AnswerStatus.incorrect;
       currentQuestion.answerChoosedByUser = null;
+      currentQuestion.timeRequiredToAnswer = 0;
 
       emit(QuizQuestionValidated(
           question: currentQuestion,
@@ -195,6 +216,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void mapQuizFinishToState(QuizFinish event, Emitter<QuizState> emit) {
     _quiz.computeScore();
+    _quizIsFinished = true;
     emit(QuizFinished(quiz: _quiz));
   }
 
@@ -207,7 +229,6 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     int scorePoints = _quiz.scorePoints;
     Score score = Score(
         name: event.scoreName, score: scorePoints, timestamp: DateTime.now());
-    debugPrint('score submitted${score.name}');
     _quiz.score = score;
     databaseBloc.add(DatabaseAddScore(score: score));
   }
@@ -228,12 +249,12 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void mapQuizPauseToState(QuizPause event, Emitter<QuizState> emit) {
     timerBloc.add(Pause());
-    emit(QuizPaused());
+    // emit(QuizPaused());
   }
 
   void mapQuizResumeToState(QuizResume event, Emitter<QuizState> emit) {
     timerBloc.add(Resume());
-    emit(QuizResumed());
+    // emit(QuizResumed());
   }
 
   void mapQuizBackToHomeToState(QuizBackToHome event, Emitter<QuizState> emit) {
@@ -261,5 +282,22 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       QuizInternetDetected event, Emitter<QuizState> emit) {
     add(QuizResume());
     emit(QuizInternetConnectionRestored());
+  }
+
+  void mapQuizPausedApplicationDetectedToState(
+      QuizPausedApplicationDetected event, Emitter<QuizState> emit) {
+    if (_quizIsFinished == true) {
+      return;
+    }
+    add(QuizPause());
+    emit(QuizPausedDueToPausedApplication());
+  }
+
+  void mapQuizResumedApplicationDetectedToState(
+      QuizResumedApplicationDetected event, Emitter<QuizState> emit) {
+    if (_quizIsFinished == true) {
+      return;
+    }
+    emit(QuizResumedApplication());
   }
 }

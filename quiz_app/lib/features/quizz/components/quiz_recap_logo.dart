@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../constants/breakpoints.dart';
 import '../../../utils/utils.dart';
 
-class AppLogo extends StatelessWidget {
-  const AppLogo({super.key});
+class QuizRecapLogo extends StatelessWidget {
+  const QuizRecapLogo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class AppLogo extends StatelessWidget {
                 Alignment.center, // Center the image within the crop area
             child: ClipRect(
               child: Image.asset(
-                'assets/images/pikachu-logo.png', // Replace with your image path
+                'assets/images/pikachu-logo-2.png', // Replace with your image path
                 fit: BoxFit
                     .cover, // Scale and crop the image to fit the crop area
               ),
@@ -72,22 +72,11 @@ class AppLogo extends StatelessWidget {
                 Alignment.center, // Center the image within the crop area
             child: ClipRect(
               child: Image.asset(
-                'assets/images/pikachu-logo.png', // Replace with your image path
+                'assets/images/pikachu-logo-2.png', // Replace with your image path
                 fit: BoxFit
                     .cover, // Scale and crop the image to fit the crop area
               ),
             ),
-          ),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width / 2,
-          height: 300,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                scale: 1,
-                opacity: 0.2,
-                image: AssetImage('assets/images/pikachu-boxShadow.png'),
-                fit: BoxFit.fitHeight),
           ),
         ),
       ]),
@@ -112,7 +101,7 @@ class AppLogo extends StatelessWidget {
                 Alignment.center, // Center the image within the crop area
             child: ClipRect(
               child: Image.asset(
-                'assets/images/pikachu-logo.png', // Replace with your image path
+                'assets/images/pikachu-logo-2.png', // Replace with your image path
                 fit: BoxFit
                     .cover, // Scale and crop the image to fit the crop area
               ),
@@ -142,7 +131,7 @@ class AppLogo extends StatelessWidget {
         alignment: Alignment.center, // Center the image within the crop area
         child: ClipRect(
           child: Image.asset(
-            'assets/images/pikachu-logo.png', // Replace with your image path
+            'assets/images/pikachu-logo-2.png', // Replace with your image path
             fit: BoxFit.cover, // Scale and crop the image to fit the crop area
           ),
         ),

@@ -7,6 +7,7 @@ import 'package:quiz_app/features/quizz/components/image_display.dart';
 import 'package:quiz_app/features/quizz/components/quiz_actions_background.dart';
 import 'package:quiz_app/features/quizz/components/timer_display.dart';
 
+import '../../../constants/breakpoints.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/enums.dart';
 import '../../../utils/utils.dart';
@@ -17,94 +18,136 @@ import '../models/quiz_model.dart';
 
 @RoutePage()
 class QuizScreen extends StatelessWidget {
-  const QuizScreen({super.key});
+  QuizScreen({super.key});
   static Quiz _quiz = Quiz();
+  bool _isDialogShowing = false;
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<QuizBloc, QuizState>(buildWhen: (previous, current) {
-      if (current is QuizPaused ||
-          current is QuizResumed ||
-          current is QuizNavigateToHome ||
-          current is QuizPausedDueToNoInternetConnection ||
-          current is QuizInternetConnectionRestored) {
-        return false;
-      } else {
-        return true;
-      }
-    }, builder: (context, state) {
-      if (state is QuizLoading) {
-        return _mapLoadingStateToUi(context, state);
-      } else if (state is QuizError) {
-        return _mapErrorStateToUi(context, state);
-      } else if (state is QuizFinished) {
-        return _mapFinishedStateToUi(context, state);
-      } else if (state is QuizQuestionShown) {
-        return _mapQuestionShowStateToUi(context, state);
-      } else if (state is QuizQuestionValidated) {
-        return _mapQuestionValidatedStateToUi(context, state);
-      } else if (state is QuizScoreDisplayed) {
-        return _mapScoreDisplayedStateToUi(context);
-      } else if (state is QuizPokemonImageDisplayed) {
-        return _mapPokemonImageDisplayedStateToUi(context);
-      } else if (state is QuizFinished) {
-        return _mapFinishedStateToUi(context, state);
-      } else {
-        return const Center(
-            child: Text('Something went wrong, please try again'));
-      }
-    }, listener: (context, state) {
-      if (state is QuizLoaded) {
-        _quiz = state.quiz;
-      } else if (state is QuizTimerRunning) {
-        debugPrint('Quiz timer running!${state.duration}');
-      } else if (state is QuizFinished) {
-        context.router.pushNamed('/quiz/recap');
-      } else if (state is QuizNavigateToHome) {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('Are you sure?'),
-                  content: const Text(
-                      'If you go back to home, the quiz will finish and your current progress will be lost.'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          context.router.pop();
-                          context.read<QuizBloc>().add(QuizResume());
-                        },
-                        child: const Text('Cancel')),
-                    TextButton(
-                        onPressed: () {
-                          context.router.popUntilRoot();
-                          context.read<QuizBloc>().add(QuizReset());
-                        },
-                        child: const Text('Go back to home'))
-                  ],
-                ));
-      } else if (state is QuizPausedDueToNoInternetConnection) {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('No internet connection'),
-                  content: const Text(
-                      'Please check your internet connection and try again.'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          context.router.popUntilRoot();
-                          context.read<QuizBloc>().add(QuizReset());
-                        },
-                        child: const Text('Go back to home'))
-                  ],
-                ));
-      } else if (state is QuizInternetConnectionRestored) {
-        context.router.pop();
-        context.read<QuizBloc>().add(QuizResume());
-      }
-    });
+    return BlocConsumer<QuizBloc, QuizState>(
+      buildWhen: (previous, current) {
+        if (current is QuizPaused ||
+            current is QuizResumed ||
+            current is QuizFinished ||
+            current is QuizNavigateToHome ||
+            current is QuizPausedDueToNoInternetConnection ||
+            current is QuizInternetConnectionRestored ||
+            current is QuizPausedDueToPausedApplication ||
+            current is QuizResumedApplication) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+      builder: (context, state) {
+        if (state is QuizLoading) {
+          return _mapLoadingStateToUi(context, state);
+        } else if (state is QuizError) {
+          return _mapErrorStateToUi(context, state);
+        } else if (state is QuizQuestionShown) {
+          return _mapQuestionShowStateToUi(context, state);
+        } else if (state is QuizQuestionValidated) {
+          return _mapQuestionValidatedStateToUi(context, state);
+        } else {
+          return const Center(
+              child: Text('Something went wrong, please try again'));
+        }
+      },
+      listener: (context, state) {
+        if (state is QuizLoaded) {
+          _quiz = state.quiz;
+        } else if (state is QuizTimerRunning) {
+          debugPrint('Quiz timer running!${state.duration}');
+        } else if (state is QuizFinished) {
+          context.router.pushNamed('/quiz/recap');
+        } else if (state is QuizNavigateToHome) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('Are you sure?'),
+                    content: const Text(
+                        'If you go back to home, the quiz will finish and your current progress will be lost.'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            context.router.popUntilRoot();
+                            context.read<QuizBloc>().add(QuizReset());
+                          },
+                          child: Text(
+                            'Go back to home',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationColor: MyColors.myBlack),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            context.router.pop();
+                            context.read<QuizBloc>().add(QuizResume());
+                          },
+                          child: const Text('Cancel')),
+                    ],
+                  ));
+        } else if (state is QuizPausedDueToNoInternetConnection) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('No internet connection'),
+                    content: const Text(
+                        'Please check your internet connection and try again.'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            context.router.popUntilRoot();
+                            context.read<QuizBloc>().add(QuizReset());
+                          },
+                          child: const Text('Go back to home'))
+                    ],
+                  ));
+        } else if (state is QuizInternetConnectionRestored) {
+          context.router.pop();
+          context.read<QuizBloc>().add(QuizResume());
+        } else if (state is QuizPausedDueToPausedApplication) {
+          if (_isDialogShowing) {
+            return;
+          }
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('App Paused'),
+                    content: const Text(
+                        'Wlecome back. Feel free to resume you quiz or go back to home.'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            context.router.pop();
+                            context.read<QuizBloc>().add(QuizResume());
+                            _isDialogShowing = false;
+                          },
+                          child: const Text('Resume quiz')),
+                      TextButton(
+                          onPressed: () {
+                            context.router.popUntilRoot();
+                            context.read<QuizBloc>().add(QuizReset());
+                            _isDialogShowing = false;
+                          },
+                          child: const Text('Go back to home'))
+                    ],
+                  ));
+          _isDialogShowing = true;
+        } else if (state is QuizResumedApplication) {}
+      },
+      listenWhen: (previous, current) {
+        if (current is QuizPausedDueToPausedApplication &&
+            previous is QuizFinished) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+    );
   }
 
   Widget _mapLoadingStateToUi(BuildContext context, QuizLoading state) {
@@ -182,10 +225,6 @@ class QuizScreen extends StatelessWidget {
     );
   }
 
-  Widget _mapFinishedStateToUi(BuildContext context, QuizFinished state) {
-    return const Center();
-  }
-
   Widget _mapQuestionShowStateToUi(
       BuildContext context, QuizQuestionShown state) {
     return BlocBuilder<TimerBloc, TimerState>(
@@ -194,9 +233,14 @@ class QuizScreen extends StatelessWidget {
         final Color backgroundColor =
             mapBackgroundColorToPokemonType(pokemonType);
         final Color backIconColor = getFontColorForBackground(backgroundColor);
+        final MyDeviceType myDeviceType =
+            getDeviceTypeFromMediaQuery(MediaQuery.of(context));
         return Scaffold(
             appBar: AppBar(
-              centerTitle: true,
+              centerTitle: myDeviceType == MyDeviceType.mobileLandscape ||
+                      myDeviceType == MyDeviceType.tabletLandscape
+                  ? false
+                  : true,
               automaticallyImplyLeading: false,
               backgroundColor: MyColors.myBackgroundColor,
               elevation: 0,
@@ -214,52 +258,40 @@ class QuizScreen extends StatelessWidget {
                   context.read<QuizBloc>().add(QuizBackToHome());
                 },
               ),
+              actions: myDeviceType == MyDeviceType.mobileLandscape ||
+                      myDeviceType == MyDeviceType.tabletLandscape
+                  ? [
+                      MyCurrentQuestionDisplay(quiz: _quiz),
+                      const SizedBox(width: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: MyTimerDisplay(
+                          timeRemaining: timerState.duration,
+                          background: backgroundColor,
+                        ),
+                      ),
+                    ]
+                  : [],
             ),
-            body: Container(
-              decoration: BoxDecoration(
-                  gradient: MyColorsGradients.myBackgroundRedGradient),
-              child: SafeArea(
-                child: Center(
-                  child: Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      children: [
-                        MyQuizActionsBackground(
-                          backgroundColor: MyColors.myWhite,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Stack(alignment: Alignment.center, children: [
-                            Column(children: [
-                              const SizedBox(
-                                height: 40,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(24.0),
-                                child: MyPokemonImage(
-                                    imageData: _quiz
-                                        .currentQuestion.pokemonImage.imageData,
-                                    show: false),
-                              ),
-                              const SizedBox(
-                                height: 40,
-                              ),
-                              MyQuestionDisplay(
-                                  question: _quiz.currentQuestion),
-                            ]),
-                            Positioned(
-                                bottom: 100,
-                                child: MyCurrentQuestionDisplay(quiz: _quiz)),
-                            Positioned(
-                                bottom: 20,
-                                child: MyTimerDisplay(
-                                  timeRemaining: timerState.duration,
-                                  background: backgroundColor,
-                                )),
-                          ]),
-                        ),
-                      ]),
-                ),
-              ),
+            body: LayoutBuilder(
+              builder: (context, constraints) {
+                if (myDeviceType == MyDeviceType.mobilePortrait) {
+                  return _questionShowMobilePortrait(
+                      context, state, timerState, backgroundColor);
+                } else if (myDeviceType == MyDeviceType.mobileLandscape) {
+                  return _questionShowMobileLandscape(
+                      context, state, timerState, backgroundColor);
+                } else if (myDeviceType == MyDeviceType.tabletPortrait) {
+                  return _questionShowTabletPortrait(
+                      context, state, timerState, backgroundColor);
+                } else if (myDeviceType == MyDeviceType.tabletLandscape) {
+                  return _questionShowTabletLandscape(
+                      context, state, timerState, backgroundColor);
+                } else {
+                  return _questionShowMobilePortrait(
+                      context, state, timerState, backgroundColor);
+                }
+              },
             ));
       },
     );
@@ -270,9 +302,14 @@ class QuizScreen extends StatelessWidget {
     final PokemonType pokemonType = _quiz.currentQuestion.pokemon.type;
     final Color backgroundColor = mapBackgroundColorToPokemonType(pokemonType);
     final Color backIconColor = getFontColorForBackground(backgroundColor);
+    final MyDeviceType myDeviceType =
+        getDeviceTypeFromMediaQuery(MediaQuery.of(context));
     return Scaffold(
         appBar: AppBar(
-          centerTitle: true,
+          centerTitle: myDeviceType == MyDeviceType.mobileLandscape ||
+                  myDeviceType == MyDeviceType.tabletLandscape
+              ? false
+              : true,
           automaticallyImplyLeading: false,
           backgroundColor: mapBackgroundColorToPokemonType(
               _quiz.currentQuestion.pokemon.type),
@@ -291,70 +328,411 @@ class QuizScreen extends StatelessWidget {
               context.read<QuizBloc>().add(QuizBackToHome());
             },
           ),
+          actions: myDeviceType == MyDeviceType.mobileLandscape ||
+                  myDeviceType == MyDeviceType.tabletLandscape
+              ? [
+                  MyCurrentQuestionDisplay(quiz: _quiz),
+                  const SizedBox(width: 50),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: TextButton(
+                      onPressed: () => {
+                        _quiz.currentQuestionIndex < _quiz.questionsCount - 1
+                            ? context
+                                .read<QuizBloc>()
+                                .add(QuizIncrementCurrentQuestion())
+                            : context.read<QuizBloc>().add(QuizFinish()),
+                      },
+                      child:
+                          _quiz.currentQuestionIndex < _quiz.questionsCount - 1
+                              ? Text(
+                                  'Next Question',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(color: MyColors.myWhite),
+                                )
+                              : Text(
+                                  'Finish Quiz',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(color: MyColors.myWhite),
+                                ),
+                    ),
+                  ),
+                ]
+              : [],
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            color: mapBackgroundColorToPokemonType(
-                _quiz.currentQuestion.pokemon.type),
-          ),
-          child: SafeArea(
-            child: Center(
-              child: Stack(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  children: [
-                    MyQuizActionsBackground(
-                      backgroundColor: MyColors.myWhite,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Stack(alignment: Alignment.center, children: [
-                        Column(children: [
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: MyPokemonImage(
-                                imageData: _quiz
-                                    .currentQuestion.pokemonImage.imageData,
-                                show: true),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          MyQuestionDisplay(question: _quiz.currentQuestion),
-                        ]),
-                        Positioned(
-                            bottom: 100,
-                            child: MyCurrentQuestionDisplay(quiz: _quiz)),
-                        Positioned(
-                            bottom: 20,
-                            child: MyButton(
-                              backgroundColor: Colors.white,
-                              text: _quiz.currentQuestionIndex <
-                                      _quiz.questionsCount - 1
-                                  ? 'Next Question'
-                                  : 'Finish Quiz',
-                              onPressed: () => _quiz.currentQuestionIndex <
-                                      _quiz.questionsCount - 1
-                                  ? context
-                                      .read<QuizBloc>()
-                                      .add(QuizIncrementCurrentQuestion())
-                                  : context.read<QuizBloc>().add(QuizFinish()),
-                            ))
-                      ]),
-                    ),
-                  ]),
-            ),
-          ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            if (myDeviceType == MyDeviceType.mobilePortrait) {
+              return _questionValidatedMobilePortrait(
+                  context, state, backgroundColor);
+            } else if (myDeviceType == MyDeviceType.mobileLandscape) {
+              return _questionValidatedMobileLandscape(
+                  context, state, backgroundColor);
+            } else if (myDeviceType == MyDeviceType.tabletPortrait) {
+              return _questionValidatedTabletPortrait(
+                  context, state, backgroundColor);
+            } else if (myDeviceType == MyDeviceType.tabletLandscape) {
+              return _questionValidatedTabletLandscape(
+                  context, state, backgroundColor);
+            } else {
+              return _questionValidatedMobilePortrait(
+                  context, state, backgroundColor);
+            }
+          },
         ));
   }
 
-  Widget _mapScoreDisplayedStateToUi(BuildContext context) {
-    return const Center();
+  Widget _questionShowMobilePortrait(BuildContext context,
+      QuizQuestionShown state, TimerState timerState, Color backgroundColor) {
+    return Container(
+      decoration:
+          BoxDecoration(gradient: MyColorsGradients.myBackgroundRedGradient),
+      child: SafeArea(
+        child: Center(
+          child: Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+            MyQuizActionsBackground(
+              backgroundColor: MyColors.myWhite,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Stack(alignment: Alignment.center, children: [
+                Column(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: MyPokemonImage(
+                        imageData: _quiz.currentQuestion.pokemonImage.imageData,
+                        show: false),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  MyQuestionDisplay(question: _quiz.currentQuestion),
+                ]),
+                Positioned(
+                    bottom: 100, child: MyCurrentQuestionDisplay(quiz: _quiz)),
+                Positioned(
+                    bottom: 20,
+                    child: MyTimerDisplay(
+                      timeRemaining: timerState.duration,
+                      background: backgroundColor,
+                    )),
+              ]),
+            ),
+          ]),
+        ),
+      ),
+    );
   }
 
-  Widget _mapPokemonImageDisplayedStateToUi(BuildContext context) {
-    return const Center();
+  Widget _questionShowMobileLandscape(BuildContext context,
+      QuizQuestionShown state, TimerState timerState, Color backgroundColor) {
+    return Container(
+      decoration:
+          BoxDecoration(gradient: MyColorsGradients.myBackgroundRedGradient),
+      child: SafeArea(
+        child: Center(
+          child: Stack(alignment: AlignmentDirectional.centerStart, children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Stack(alignment: Alignment.center, children: [
+                Row(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: MyPokemonImage(
+                        imageData: _quiz.currentQuestion.pokemonImage.imageData,
+                        show: false),
+                  ),
+                  const SizedBox(
+                    width: 40,
+                  ),
+                  MyQuestionDisplay(question: _quiz.currentQuestion),
+                ]),
+              ]),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _questionShowTabletPortrait(BuildContext context,
+      QuizQuestionShown state, TimerState timerState, Color backgroundColor) {
+    return Container(
+      decoration:
+          BoxDecoration(gradient: MyColorsGradients.myBackgroundRedGradient),
+      child: SafeArea(
+        child: Center(
+          child: Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+            MyQuizActionsBackground(
+              backgroundColor: MyColors.myWhite,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Stack(alignment: Alignment.center, children: [
+                Column(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: MyPokemonImage(
+                        imageData: _quiz.currentQuestion.pokemonImage.imageData,
+                        show: false),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  ConstrainedBox(
+                      constraints:
+                          const BoxConstraints(maxWidth: 600, maxHeight: 400),
+                      child:
+                          MyQuestionDisplay(question: _quiz.currentQuestion)),
+                ]),
+                Positioned(
+                    bottom: 100, child: MyCurrentQuestionDisplay(quiz: _quiz)),
+                Positioned(
+                    bottom: 20,
+                    child: MyTimerDisplay(
+                      timeRemaining: timerState.duration,
+                      background: backgroundColor,
+                    )),
+              ]),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _questionShowTabletLandscape(BuildContext context,
+      QuizQuestionShown state, TimerState timerState, Color backgroundColor) {
+    return Container(
+      decoration:
+          BoxDecoration(gradient: MyColorsGradients.myBackgroundRedGradient),
+      child: SafeArea(
+        child: Center(
+          child: Stack(alignment: AlignmentDirectional.centerStart, children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Stack(alignment: Alignment.center, children: [
+                Row(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: MyPokemonImage(
+                        imageData: _quiz.currentQuestion.pokemonImage.imageData,
+                        show: false),
+                  ),
+                  const SizedBox(
+                    width: 40,
+                  ),
+                  MyQuestionDisplay(question: _quiz.currentQuestion),
+                ]),
+              ]),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _questionValidatedMobilePortrait(BuildContext context,
+      QuizQuestionValidated state, Color backgroundColor) {
+    return Container(
+      decoration: BoxDecoration(
+        color:
+            mapBackgroundColorToPokemonType(_quiz.currentQuestion.pokemon.type),
+      ),
+      child: SafeArea(
+        child: Center(
+          child: Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+            MyQuizActionsBackground(
+              backgroundColor: MyColors.myWhite,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Stack(alignment: Alignment.center, children: [
+                Column(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: MyPokemonImage(
+                        imageData: _quiz.currentQuestion.pokemonImage.imageData,
+                        show: true),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  MyQuestionDisplay(question: _quiz.currentQuestion),
+                ]),
+                Positioned(
+                    bottom: 100, child: MyCurrentQuestionDisplay(quiz: _quiz)),
+                Positioned(
+                    bottom: 20,
+                    child: MyButton(
+                      backgroundColor: Colors.white,
+                      text:
+                          _quiz.currentQuestionIndex < _quiz.questionsCount - 1
+                              ? 'Next Question'
+                              : 'Finish Quiz',
+                      onPressed: () =>
+                          _quiz.currentQuestionIndex < _quiz.questionsCount - 1
+                              ? context
+                                  .read<QuizBloc>()
+                                  .add(QuizIncrementCurrentQuestion())
+                              : context.read<QuizBloc>().add(QuizFinish()),
+                    ))
+              ]),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _questionValidatedMobileLandscape(BuildContext context,
+      QuizQuestionValidated state, Color backgroundColor) {
+    return Container(
+      decoration: BoxDecoration(
+        color:
+            mapBackgroundColorToPokemonType(_quiz.currentQuestion.pokemon.type),
+      ),
+      child: SafeArea(
+        child: Center(
+          child: Stack(alignment: AlignmentDirectional.centerStart, children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Stack(alignment: Alignment.center, children: [
+                Row(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: MyPokemonImage(
+                        imageData: _quiz.currentQuestion.pokemonImage.imageData,
+                        show: true),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  MyQuestionDisplay(question: _quiz.currentQuestion),
+                ]),
+              ]),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _questionValidatedTabletPortrait(BuildContext context,
+      QuizQuestionValidated state, Color backgroundColor) {
+    return Container(
+      decoration: BoxDecoration(
+        color:
+            mapBackgroundColorToPokemonType(_quiz.currentQuestion.pokemon.type),
+      ),
+      child: SafeArea(
+        child: Center(
+          child: Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+            MyQuizActionsBackground(
+              backgroundColor: MyColors.myWhite,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Stack(alignment: Alignment.center, children: [
+                Column(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: MyPokemonImage(
+                        imageData: _quiz.currentQuestion.pokemonImage.imageData,
+                        show: true),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  ConstrainedBox(
+                      constraints:
+                          const BoxConstraints(maxWidth: 600, maxHeight: 400),
+                      child:
+                          MyQuestionDisplay(question: _quiz.currentQuestion)),
+                ]),
+                Positioned(
+                    bottom: 100, child: MyCurrentQuestionDisplay(quiz: _quiz)),
+                Positioned(
+                    bottom: 20,
+                    child: MyButton(
+                      backgroundColor: Colors.white,
+                      text:
+                          _quiz.currentQuestionIndex < _quiz.questionsCount - 1
+                              ? 'Next Question'
+                              : 'Finish Quiz',
+                      onPressed: () =>
+                          _quiz.currentQuestionIndex < _quiz.questionsCount - 1
+                              ? context
+                                  .read<QuizBloc>()
+                                  .add(QuizIncrementCurrentQuestion())
+                              : context.read<QuizBloc>().add(QuizFinish()),
+                    ))
+              ]),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _questionValidatedTabletLandscape(BuildContext context,
+      QuizQuestionValidated state, Color backgroundColor) {
+    return Container(
+      decoration: BoxDecoration(
+        color:
+            mapBackgroundColorToPokemonType(_quiz.currentQuestion.pokemon.type),
+      ),
+      child: SafeArea(
+        child: Center(
+          child: Stack(alignment: AlignmentDirectional.centerStart, children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Stack(alignment: Alignment.center, children: [
+                Row(children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: MyPokemonImage(
+                        imageData: _quiz.currentQuestion.pokemonImage.imageData,
+                        show: true),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  MyQuestionDisplay(question: _quiz.currentQuestion),
+                ]),
+              ]),
+            ),
+          ]),
+        ),
+      ),
+    );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants/breakpoints.dart';
+import '../../../utils/utils.dart';
 import '../models/quiz_model.dart';
 
 class QuizRecapInfo extends StatelessWidget {
@@ -8,81 +10,89 @@ class QuizRecapInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 300,
-      child: Stack(alignment: AlignmentDirectional.center, children: [
-        Positioned(
-          bottom: 0,
+    MyDeviceType myDeviceType =
+        getDeviceTypeFromMediaQuery(MediaQuery.of(context));
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Expanded(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              minHeight: (myDeviceType == MyDeviceType.mobilePortrait ||
+                      myDeviceType == MyDeviceType.tabletPortrait)
+                  ? 250
+                  : 150,
+              minWidth: 150),
           child: Card(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minWidth: 200,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    Text('Your Answers',
-                        style: Theme.of(context).textTheme.headlineSmall),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            const Icon(
-                              Icons.check,
-                              color: Colors.green,
-                              size: 50,
-                            ),
-                            Text('${quiz.correctAnswersCount}',
-                                style:
-                                    Theme.of(context).textTheme.headlineLarge),
-                          ],
-                        ),
-                        const SizedBox(width: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Icon(
-                              Icons.close,
-                              color: Colors.red,
-                              size: 50,
-                            ),
-                            Text('${quiz.wrongAnswersCount}',
-                                style:
-                                    Theme.of(context).textTheme.headlineLarge),
-                          ],
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+            margin: const EdgeInsets.only(right: 10.0),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Your \nAnswers',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                        size: 50,
+                      ),
+                      Text('${quiz.correctAnswersCount}',
+                          style: Theme.of(context).textTheme.headlineLarge),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                        size: 50,
+                      ),
+                      Text(
+                        '${quiz.wrongAnswersCount}',
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
           ),
         ),
-        Positioned(
-            top: 0,
-            child: Card(
-                child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minWidth: 200,
-              ),
+      ),
+      Expanded(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              minHeight: (myDeviceType == MyDeviceType.mobilePortrait ||
+                      myDeviceType == MyDeviceType.tabletPortrait)
+                  ? 250
+                  : 150,
+              minWidth: 150),
+          child: Card(
+              margin: const EdgeInsets.only(left: 10.0),
               child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Your Score',
-                          style: Theme.of(context).textTheme.headlineSmall),
+                      Text(
+                        'Your \nScore',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                        textAlign: TextAlign.center,
+                      ),
                       Text(
                         '${quiz.scorePoints}',
                         style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ],
-                  )),
-            )))
-      ]),
-    );
+                  ))),
+        ),
+      )
+    ]);
   }
 }

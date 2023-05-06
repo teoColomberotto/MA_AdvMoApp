@@ -1,4 +1,6 @@
 //create a singleton Quiz class that contain a list of Question and a score
+// ignore_for_file: unnecessary_getters_setters
+
 import 'package:quiz_app/features/quizz/models/question_model.dart';
 
 import '../../../constants/enums.dart';
@@ -43,7 +45,7 @@ class Quiz {
     int score = 0;
     for (final question in _questions) {
       if (question.answer == AnswerStatus.correct) {
-        score += 50;
+        score += 10 * question.timeRequiredToAnswer;
       }
     }
     _scorePoints = score;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../constants/colors.dart';
 import '../../database/models/score_model.dart';
 
 class MyScoreTile extends StatelessWidget {
@@ -17,7 +18,14 @@ class MyScoreTile extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: CircleAvatar(
-          child: Text(score.score.toString()),
+          backgroundColor: MyColors.mySecondaryColor,
+          child: Text(
+            score.score.toString(),
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(color: MyColors.myBlack),
+          ),
         ),
         title: Text(score.name),
         subtitle: Text(formattedData),

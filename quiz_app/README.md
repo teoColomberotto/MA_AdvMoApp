@@ -43,6 +43,7 @@ flutter packages pub run build_runner watch
 * Custom Theme
 * Firebase Firestore Database & Storage
 * Internet conncetion status
+* Application lifecycle management
 * Inputs Validation
 
 ### Up-Coming Features:
@@ -109,6 +110,7 @@ features/
 |- database/
 |- home/
 |- leaderboard/
+|- lifecycle/
 |- quizz/
 |- storage/
 ```

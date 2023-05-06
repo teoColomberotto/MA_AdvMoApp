@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/constants/breakpoints.dart';
 import 'package:quiz_app/constants/colors.dart';
 import 'package:quiz_app/constants/enums.dart';
 
@@ -61,4 +62,45 @@ Color getFontColorForBackground(Color background) {
   return (background.computeLuminance() > 0.5)
       ? MyColors.myBlack
       : MyColors.myWhite;
+}
+
+MyDeviceType getDeviceTypeFromMediaQuery(MediaQueryData mediaQuery) {
+  if (mediaQuery.orientation == Orientation.landscape) {
+    if (mediaQuery.size.height >= MyBreakpoints.kDesktopMinWidth &&
+        mediaQuery.size.width >= MyBreakpoints.kDesktopMinHeight &&
+        mediaQuery.size.height <= MyBreakpoints.kDesktopMaxWidth &&
+        mediaQuery.size.width <= MyBreakpoints.kDesktopMaxHeight) {
+      // Device is a desktop computer in landscape orientation
+      return MyDeviceType.desktopLandscape;
+    } else if (mediaQuery.size.height >= MyBreakpoints.kTabletMinWidth &&
+        mediaQuery.size.width >= MyBreakpoints.kTabletMinHeight &&
+        mediaQuery.size.height <= MyBreakpoints.kTabletMaxWidth &&
+        mediaQuery.size.width <= MyBreakpoints.kTabletMaxHeight) {
+      // Device is a tablet in landscape orientation
+      return MyDeviceType.tabletLandscape;
+    } else {
+      // Device is a mobile phone in landscape orientation
+      return MyDeviceType.mobileLandscape;
+    }
+  } else if (mediaQuery.orientation == Orientation.portrait) {
+    if (mediaQuery.size.height >= MyBreakpoints.kDesktopMinHeight &&
+        mediaQuery.size.width >= MyBreakpoints.kDesktopMinWidth &&
+        mediaQuery.size.height <= MyBreakpoints.kDesktopMaxHeight &&
+        mediaQuery.size.width <= MyBreakpoints.kDesktopMaxWidth) {
+      // Device is a desktop computer in portrait orientation
+      return MyDeviceType.desktopPortrait;
+    } else if (mediaQuery.size.height >= MyBreakpoints.kTabletMinHeight &&
+        mediaQuery.size.width >= MyBreakpoints.kTabletMinWidth &&
+        mediaQuery.size.height <= MyBreakpoints.kTabletMaxHeight &&
+        mediaQuery.size.width <= MyBreakpoints.kTabletMaxWidth) {
+      // Device is a tablet in portrait orientation
+      return MyDeviceType.tabletPortrait;
+    } else {
+      // Device is a mobile phone in portrait orientation
+      return MyDeviceType.mobilePortrait;
+    }
+  } else {
+    // Device is a desktop computer in landscape orientation
+    return MyDeviceType.desktopLandscape;
+  }
 }
