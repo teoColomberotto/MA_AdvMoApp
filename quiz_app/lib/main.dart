@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:quiz_app/features/home/bloc/bloc/home_bloc.dart';
+import 'package:quiz_app/features/play_settings/bloc/play_settings_bloc.dart';
 import 'features/about/bloc/about_bloc.dart';
 import 'features/connectivity/bloc/connectivity_bloc.dart';
 import 'features/leaderboard/bloc/leaderboard_bloc.dart';
@@ -55,6 +56,9 @@ void main() async {
             create: (context) =>
                 LeaderboardBloc(databaseBloc: context.read<DatabaseBloc>())),
         BlocProvider(create: (context) => AboutBloc()),
+        BlocProvider(
+          create: (context) => PlaySettingsBloc(),
+        )
       ],
       child: const MyApp(),
     ),

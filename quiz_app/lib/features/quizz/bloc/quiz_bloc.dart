@@ -6,9 +6,12 @@ import 'package:quiz_app/constants/constants.dart';
 import 'package:quiz_app/constants/enums.dart';
 import 'package:quiz_app/exceptions/questions_lenght_exceeded_exception.dart';
 import 'package:quiz_app/features/database/bloc/database_bloc.dart';
+import 'package:quiz_app/features/play_settings/models/play_settings_model.dart';
 import 'package:quiz_app/features/quizz/bloc/timer_bloc.dart';
 import 'package:quiz_app/features/storage/bloc/storage_bloc.dart';
 import 'package:quiz_app/features/storage/models/pokemon_image_model.dart';
+import 'package:quiz_app/utils/utils.dart';
+import '../models/ticker_model.dart';
 
 import '../../connectivity/bloc/connectivity_bloc.dart';
 import '../../database/models/pokemon_model.dart';
@@ -32,6 +35,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   late final StreamSubscription strorageSubscription;
   late final StreamSubscription connectivitySubscription;
   late final StreamSubscription lifecycleSubscription;
+  late int _durationTimer;
 
   bool _quizIsFinished = false;
 
@@ -134,7 +138,11 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   void mapQuizStartedToState(QuizStart event, Emitter<QuizState> emit) {
     _quizIsFinished = false;
     emit(const QuizLoading(message: 'Loading quiz...'));
-    databaseBloc.add(const DatabaseGetPokemonsList(limit: 10));
+    databaseBloc.add(
+        DatabaseGetPokemonsList(limit: event.playSettings.numberOfQuestions));
+    int timerDuration =
+        mapDifficultyToTimerDuration(difficulty: event.playSettings.difficulty);
+    _durationTimer = timerDuration;
   }
 
   void mapQuizCreateToState(QuizCreate event, Emitter<QuizState> emit) {
@@ -143,9 +151,10 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       questions.add(Question.fromPokemon(pokemon: pokemon));
     }
     _quiz.questions = questions;
+    _quiz.timerDuration = _durationTimer;
 
     emit(QuizLoaded(quiz: _quiz));
-    timerBloc.add(Start(duration: 5));
+    timerBloc.add(Start(duration: _durationTimer));
     add(QuizShowCurrentQuestion());
   }
 
@@ -186,7 +195,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     } else {
       throw QuestionsLenghtExceeded(index: currentQuestionIndex);
     }
-    timerBloc.add(Start(duration: 5));
+    timerBloc.add(Start(duration: _durationTimer));
     add(QuizShowCurrentQuestion());
   }
 
@@ -240,6 +249,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void mapQuizResetToState(QuizReset event, Emitter<QuizState> emit) {
     _quiz.dispose();
+    _durationTimer = 0;
     emit(QuizInitial());
   }
 

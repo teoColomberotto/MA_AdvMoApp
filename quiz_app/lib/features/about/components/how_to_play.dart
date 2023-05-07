@@ -885,7 +885,8 @@ class HowToTimer extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: MyTimerDisplay(
-                            timeRemaining: constants.timerDuration % 2,
+                            totalTime: 10,
+                            timeRemaining: 5,
                             background: MyColors.myBackgroundColor,
                           ),
                         ),

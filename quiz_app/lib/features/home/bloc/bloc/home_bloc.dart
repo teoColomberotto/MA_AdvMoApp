@@ -44,7 +44,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(const HomeQuizStartRefused(message: 'No internet connection'));
         }
       } else {
-        quizBloc.add(QuizStart());
+        // quizBloc.add(QuizStart());
         emit(HomePlayButtonPressed());
       }
     }).onError((error, stackTrace) {

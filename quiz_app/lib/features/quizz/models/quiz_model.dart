@@ -11,6 +11,7 @@ class Quiz {
   int _currentQuestionIndex = 0;
   int _scorePoints = 0;
   late Score _score;
+  int _timerDuration;
 
   static final Quiz _singleton = Quiz._internal();
 
@@ -18,7 +19,9 @@ class Quiz {
     return _singleton;
   }
 
-  Quiz._internal() : _questions = [];
+  Quiz._internal()
+      : _questions = [],
+        _timerDuration = 0;
 
   Score get score => _score;
   int get scorePoints => _scorePoints;
@@ -32,10 +35,12 @@ class Quiz {
       .where((question) => question.answer == AnswerStatus.incorrect)
       .length;
   List<Question> get questions => _questions;
+  int get timerDuration => _timerDuration;
 
   set currentQuestionIndex(int index) => _currentQuestionIndex = index;
   set score(Score value) => _score = value;
   set questions(List<Question> value) => _questions = value;
+  set timerDuration(int value) => _timerDuration = value;
 
   void resetQuiz() {
     Quiz._internal();

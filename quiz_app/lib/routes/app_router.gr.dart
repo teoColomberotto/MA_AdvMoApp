@@ -27,9 +27,11 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     QuizRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<QuizRouteArgs>(orElse: () => const QuizRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: QuizScreen(),
+        child: QuizScreen(key: args.key),
       );
     },
     QuizRecapRoute.name: (routeData) {
@@ -47,7 +49,13 @@ abstract class _$AppRouter extends RootStackRouter {
     AboutRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: AboutScreen(),
+        child: const AboutScreen(),
+      );
+    },
+    PlaySettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PlaySettingsScreen(),
       );
     },
   };
@@ -92,16 +100,30 @@ class HomeRouteArgs {
 
 /// generated route for
 /// [QuizScreen]
-class QuizRoute extends PageRouteInfo<void> {
-  const QuizRoute({List<PageRouteInfo>? children})
-      : super(
+class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
+  QuizRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           QuizRoute.name,
+          args: QuizRouteArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'QuizRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<QuizRouteArgs> page = PageInfo<QuizRouteArgs>(name);
+}
+
+class QuizRouteArgs {
+  const QuizRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'QuizRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -142,6 +164,20 @@ class AboutRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AboutRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PlaySettingsScreen]
+class PlaySettingsRoute extends PageRouteInfo<void> {
+  const PlaySettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          PlaySettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PlaySettingsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
