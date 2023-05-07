@@ -7,7 +7,6 @@ import 'package:quiz_app/features/quizz/components/timer_display.dart';
 import '../../../common_widgets/my_button.dart';
 import '../../../constants/breakpoints.dart';
 import '../../../constants/colors.dart';
-import '../../../constants/constants.dart' as constants;
 import '../../../utils/utils.dart';
 
 class MyHowToPlay extends StatefulWidget {

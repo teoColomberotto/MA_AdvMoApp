@@ -11,7 +11,6 @@ import 'package:quiz_app/features/quizz/bloc/timer_bloc.dart';
 import 'package:quiz_app/features/storage/bloc/storage_bloc.dart';
 import 'package:quiz_app/features/storage/models/pokemon_image_model.dart';
 import 'package:quiz_app/utils/utils.dart';
-import '../models/ticker_model.dart';
 
 import '../../connectivity/bloc/connectivity_bloc.dart';
 import '../../database/models/pokemon_model.dart';

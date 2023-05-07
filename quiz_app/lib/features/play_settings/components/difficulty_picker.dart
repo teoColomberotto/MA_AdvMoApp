@@ -1,7 +1,8 @@
+// ignore_for_file: library_private_types_in_public_api, no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:quiz_app/features/play_settings/components/difficulty_tile.dart';
 
-import '../../../constants/colors.dart';
 import '../../../constants/enums.dart';
 
 class DifficultyPicker extends StatefulWidget {

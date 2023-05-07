@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +17,8 @@ import '../bloc/play_settings_bloc.dart';
 
 @RoutePage()
 class PlaySettingsScreen extends StatefulWidget {
+  const PlaySettingsScreen({super.key});
+
   @override
   _PlaySettingsScreenState createState() => _PlaySettingsScreenState();
 }
