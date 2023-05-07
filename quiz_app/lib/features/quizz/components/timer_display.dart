@@ -7,12 +7,13 @@ import '../../../utils/utils.dart';
 
 class MyTimerDisplay extends StatelessWidget {
   final int timeRemaining;
-  final int totalTime = constants.timerDuration;
+  final int totalTime;
 
   final Color background;
 
   const MyTimerDisplay({
     super.key,
+    required this.totalTime,
     required this.timeRemaining,
     required this.background,
   });

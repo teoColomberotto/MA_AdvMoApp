@@ -7,7 +7,14 @@ abstract class QuizEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class QuizStart extends QuizEvent {}
+class QuizStart extends QuizEvent {
+  final PlaySettings playSettings;
+
+  const QuizStart({required this.playSettings});
+
+  @override
+  List<Object> get props => [playSettings];
+}
 
 class QuizCreate extends QuizEvent {
   final List<Pokemon> pokemons;

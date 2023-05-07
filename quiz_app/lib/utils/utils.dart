@@ -104,3 +104,16 @@ MyDeviceType getDeviceTypeFromMediaQuery(MediaQueryData mediaQuery) {
     return MyDeviceType.desktopLandscape;
   }
 }
+
+int mapDifficultyToTimerDuration({required Difficulty difficulty}) {
+  switch (difficulty) {
+    case Difficulty.easy:
+      return 20;
+    case Difficulty.medium:
+      return 10;
+    case Difficulty.hard:
+      return 5;
+    default:
+      return 5;
+  }
+}

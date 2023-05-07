@@ -6,6 +6,7 @@ import '../features/leaderboard/views/leaderboard_screen.dart';
 import '../features/quizz/views/quiz_screen.dart';
 import '../features/quizz/views/quiz_recap_screen.dart';
 import '../features/about/views/about_screen.dart';
+import '../features/play_settings/views/play_settings_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -16,6 +17,8 @@ class AppRouter extends _$AppRouter {
         /// routes go here
         AutoRoute(path: '/home', page: HomeRoute.page, initial: true),
         AutoRoute(path: '/quiz', page: QuizRoute.page, initial: false),
+        AutoRoute(
+            path: '/quiz/setup', page: PlaySettingsRoute.page, initial: false),
         AutoRoute(
             path: '/quiz/recap', page: QuizRecapRoute.page, initial: false),
         AutoRoute(

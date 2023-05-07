@@ -111,6 +111,7 @@ features/
 |- home/
 |- leaderboard/
 |- lifecycle/
+|- play_settings/
 |- quizz/
 |- storage/
 ```

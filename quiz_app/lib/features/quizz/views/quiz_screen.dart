@@ -266,6 +266,7 @@ class QuizScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
                         child: MyTimerDisplay(
+                          totalTime: _quiz.timerDuration,
                           timeRemaining: timerState.duration,
                           background: backgroundColor,
                         ),
@@ -420,6 +421,7 @@ class QuizScreen extends StatelessWidget {
                 Positioned(
                     bottom: 20,
                     child: MyTimerDisplay(
+                      totalTime: _quiz.timerDuration,
                       timeRemaining: timerState.duration,
                       background: backgroundColor,
                     )),
@@ -503,6 +505,7 @@ class QuizScreen extends StatelessWidget {
                 Positioned(
                     bottom: 20,
                     child: MyTimerDisplay(
+                      totalTime: _quiz.timerDuration,
                       timeRemaining: timerState.duration,
                       background: backgroundColor,
                     )),

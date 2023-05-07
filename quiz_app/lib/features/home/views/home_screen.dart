@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
     return BlocListener<HomeBloc, HomeState>(
         listener: (context, state) {
           if (state is HomePlayButtonPressed) {
-            context.router.pushNamed('/quiz');
+            context.router.pushNamed('/quiz/setup');
             context.read<HomeBloc>().add(HomeResetState());
           } else if (state is HomeLeaderboardButtonPressed) {
             context.router.pushNamed('/leaderboard');
