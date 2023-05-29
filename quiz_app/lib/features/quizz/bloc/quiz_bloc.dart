@@ -163,7 +163,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     timerBloc.add(Reset());
     if (event.answerIndex != null) {
       currentQuestion.answerChoosedByUser = event.answerIndex;
-      currentQuestion.timeRequiredToAnswer = event.duration;
+      currentQuestion.timeRequiredToAnswer = _durationTimer - event.duration;
       if (currentQuestion.pokemon.answers[event.answerIndex.toString()][1] ==
           true) {
         currentQuestion.answer = AnswerStatus.correct;
