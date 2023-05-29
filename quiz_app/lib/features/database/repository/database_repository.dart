@@ -19,6 +19,11 @@ class DatabaseRepositoryImpl implements DatabaseRepository {
     List<Pokemon> pokemonsList = pokemonsListSnapshot!.docs
         .map((docSnapshot) => Pokemon.fromDocumentSnapshot(docSnapshot))
         .toList();
+    //shuffle asnwers inside each pokemon
+    pokemonsList.forEach((pokemon) {
+      pokemon.answers.shuffle();
+    });
+    pokemonsList.shuffle();
     return pokemonsList;
   }
 
