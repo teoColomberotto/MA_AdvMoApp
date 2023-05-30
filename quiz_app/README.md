@@ -1,7 +1,8 @@
 # Pokemon Quiz App
+A responsive multiplatform mobile application developed in the context of the MA_AdvMoApp class provided by the HES-SO Master degree.
 
-A boilerplate project created in flutter using MobX and Provider. Boilerplate supports both web and mobile, clone the appropriate branches mentioned below:
-
+This app aim to mock a simple pokemon shiloutte quiz. The user goal is to guess a list of mystery pokemons by looking at their shiloutte.
+A leaderboard and how to play features is also implemented.
 
 ## Getting Started
 
@@ -35,6 +36,13 @@ or watch command in order to keep the source code synced automatically:
 flutter packages pub run build_runner watch
 ```
 
+### Disclaimer
+Since the app is still in its prototype phase, make sure to use one of the following device (via emulator) to properly test the application:
+- Google Pixel 6 Pro (smartphone)
+- Google Pixel C (tablet)
+
+Graphical and UI bug or bizzarre behaviours may appear if another device is used instead.
+
 ## Pokemon App Features:
 
 * Splash screen
@@ -47,6 +55,7 @@ flutter packages pub run build_runner watch
 * Inputs Validation
 
 ### Up-Coming Features:
+No upcoming features planned
 
 
 ## Libraries & Tools Used
@@ -139,5 +148,3 @@ Unit test coverage:
 ## Wiki
 
 Checkout [wiki](https://github.com/teoColomberotto/MA_AdvMoApp/wiki) for more info
-
-## Conclusion
